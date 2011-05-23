@@ -27,18 +27,41 @@ Rectangle {
   id: mainRect
 
   property string appTitle: "BRead Book Reader"
+  property real topReserve: 20
+
+  signal quitApp ()
+  signal startReading ()
+
+  function readBook () {
+    showReadBox ()
+    startReading ()
+  }
+  function stopReading () {
+    hideReadBox ()
+  }
+  function showReadBox () {
+    bookViewRect.height = bookViewRect.visibleHeight
+    titleBox.height = titleBox.hiddenHeight
+  }
+  function hideReadBox () {
+    bookViewRect.height = bookViewRect.hiddenHeight
+    titleBox.height = titleBox.visibleHeight
+  }
 
   width: 600
   height: 400
   color: "yellow"
+
   Rectangle {
     id: titleBox
     width: parent.width * 0.75
-    height: parent.height * 0.5
+    property real visibleHeight: parent.height * 0.25
+    property real hiddenHeight: 0
+    height: visibleHeight
     anchors {
       horizontalCenter: parent.horizontalCenter
       top: parent.top
-      topMargin: 50
+      topMargin: topReserve
     }
     color: "#f7f7f7"
     Text { 
@@ -46,6 +69,68 @@ Rectangle {
       style: Text.Sunken
       wrapMode: Text.Wrap
       text: mainRect.appTitle
+    }
+    Behavior  on height {
+      NumberAnimation { duration: 250 }
+    }
+  }
+
+  Rectangle {
+    id: buttonRowRect
+    height: 32
+    width: parent.width
+    property real buttonHeight: height
+    color: "transparent"
+    anchors {
+      top: titleBox.bottom
+      topMargin: 4
+      horizontalCenter: mainRect.horizontalCenter
+    }
+
+    Row {
+      anchors.centerIn: parent
+      spacing: 4
+      ChoiceButton {
+        id: bookButton
+        height: buttonRowRect.buttonHeight
+        labelText: qsTr ("Read Books")
+        onClicked: {
+          mainRect.readBook ()
+        }
+      }
+      ChoiceButton {
+        id: stopButton
+        height: buttonRowRect.buttonHeight
+        labelText: qsTr ("Stop Reading")
+        onClicked: {
+          mainRect.stopReading ()
+        }
+      }
+      ChoiceButton {
+        id: quitButton
+        height: buttonRowRect.buttonHeight
+        labelText: qsTr ("Quit")
+        onClicked: {
+          mainRect.quitApp ()
+        }
+      }
+    }
+
+  }
+
+  Rectangle {
+    id: bookViewRect
+    width: parent.width
+    property real visibleHeight: parent.height - buttonRowRect.height - titleBox.height - parent.topReserve
+    property real hiddenHeight: 0
+    height: hiddenHeight
+    color: "lightblue"
+    anchors {
+      top: buttonRowRect.bottom
+      left: parent.left
+    }
+    Behavior  on height {
+      NumberAnimation { duration: 250 }
     }
   }
   Component.onCompleted: {

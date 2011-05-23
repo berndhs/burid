@@ -33,6 +33,8 @@ all: $(MAKEFILE)
 clean: $(MAKEFILE) FORCE
 	$(MAKE) -f $(MAKEFILE) clean
 
+fresh: clean all
+
 distclean: $(MAKEFILE) FORCE
 	$(MAKE) -f $(MAKEFILE) distclean
 	rm -f $(MAKEFILE)

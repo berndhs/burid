@@ -17,5 +17,6 @@
 </qresource>
 <qresource>
   <file alias="DefaultMain.qml">qml/DefaultMain.qml</file>
+  <file alias="ChoiceButton.qml">qml/ChoiceButton.qml</file>
 </qresource>
 </RCC>

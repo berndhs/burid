@@ -1,5 +1,3 @@
-#ifndef BREAD_BREAD_H
-#define BREAD_BREAD_H
 
 
 /****************************************************************
@@ -24,36 +22,42 @@
  ****************************************************************/
 
 
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
+import QtQuick 1.0
 
-namespace bread
-{
-class Bread: public QDeclarativeView
-{
-Q_OBJECT
-public:
+Rectangle {
+  id: button
+  signal clicked ()
+  signal pressAndHold ()
+  signal pressed ()
+  property alias labelText : label.text
+  property alias labelHeight: label.height
+  property alias labelWidth: label.width
+  property real commonMargin: 4
 
-  Bread (QWidget *parent=0);
+  signal labelChanged (string text)
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
-
-public slots:
-
-  void Quit ();
-
-private:
-
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
-
-};
-
-} // namespace
-
-#endif
+  width: 100
+  height: 100
+  radius: 5
+  color: "#d3d3d3"
+  anchors { 
+    topMargin: commonMargin; bottomMargin: commonMargin; 
+    leftMargin: commonMargin; rightMargin: commonMargin
+  }
+  MouseArea {
+    anchors.fill: parent
+    onClicked: { parent.clicked () }
+    onPressAndHold: { parent.pressAndHold () }
+    onPressed: { parent.pressed () }
+  }
+  Text { 
+    id: label
+    text: "Button"
+    z: parent.z
+    wrapMode:Text.Wrap
+    width: parent.width
+    anchors.centerIn: parent 
+    horizontalAlignment: Text.AlignHCenter
+    onTextChanged: { button.labelChanged (label.text) }
+ }
+}

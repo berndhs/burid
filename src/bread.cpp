@@ -53,8 +53,17 @@ Bread::Run ()
   qmlRoot = rootObject();
   if (qmlRoot) {
     qmlRoot->setProperty ("appText",QString ("BRead Book Reader"));
+    connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
   }
   show ();
+}
+
+void
+Bread::Quit ()
+{
+  if (app) {
+    app->quit ();
+  }
 }
 
 
