@@ -15,4 +15,7 @@
   <file alias="icon32.png">images/icon32.png</file>
   <file alias="icon16.png">images/icon16.png</file>
 </qresource>
+<qresource>
+  <file alias="DefaultMain.qml">qml/DefaultMain.qml</file>
+</qresource>
 </RCC>

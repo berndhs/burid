@@ -48,7 +48,8 @@ Bread::AddConfigMessages (const QStringList & messages)
 void
 Bread::Run ()
 {
-  setSource (QUrl::fromLocalFile ("qml/DefaultMain.qml"));
+  setSource (QUrl("qrc:/DefaultMain.qml"));
+  setResizeMode (QDeclarativeView::SizeRootObjectToView);
   qmlRoot = rootObject();
   if (qmlRoot) {
     qmlRoot->setProperty ("appText",QString ("BRead Book Reader"));

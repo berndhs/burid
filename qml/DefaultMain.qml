@@ -28,12 +28,25 @@ Rectangle {
 
   property string appTitle: "BRead Book Reader"
 
-  width: 500
+  width: 600
   height: 400
   color: "yellow"
-  Text { 
-    anchors.centerIn: parent; 
-    text: appTitle
+  Rectangle {
+    id: titleBox
+    width: parent.width * 0.75
+    height: parent.height * 0.5
+    anchors {
+      horizontalCenter: parent.horizontalCenter
+      top: parent.top
+      topMargin: 50
+    }
+    color: "#f7f7f7"
+    Text { 
+      anchors.centerIn: parent
+      style: Text.Sunken
+      wrapMode: Text.Wrap
+      text: mainRect.appTitle
+    }
   }
   Component.onCompleted: {
     console.log ("done loaded main component!")
