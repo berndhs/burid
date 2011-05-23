@@ -1,0 +1,18 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+<file>icon.png</file>
+</qresource>
+<qresource prefix="/help">
+  <file alias="LICENSE.txt">help/LICENSE.txt</file>
+  <file alias="manual.html">help/manual.html</file>
+</qresource>
+<qresource prefix="/images">
+  <file alias="icon256.png">images/icon256.png</file>
+  <file alias="icon128.png">images/icon128.png</file>
+  <file alias="icon64.png">images/icon64.png</file>
+  <file alias="icon48.png">images/icon48.png</file>
+  <file alias="icon32.png">images/icon32.png</file>
+  <file alias="icon16.png">images/icon16.png</file>
+</qresource>
+</RCC>

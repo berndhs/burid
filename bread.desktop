@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=BRead E-book Viewer
+GenericName=Viewer for E-books
+Comment=Viewer for E-books in some of the major formats
+TryExec=ebook-viewer
+Exec=ebook-viewer %F
+Icon=calibre-viewer
+Categories=Graphics;Viewer;
+MimeType=application/vnd.ctc-posml;text/html;application/ereader;application/oebps-package+xml;application/x-sony-bbeb;text/rtf;application/pdf;application/x-cbz;application/x-mobipocket-ebook;application/x-cbr;text/fb2+xml;application/vnd.oasis.opendocument.text;application/epub+zip;text/plain;application/xhtml+xml;
