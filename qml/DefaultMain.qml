@@ -27,7 +27,7 @@ Rectangle {
   id: mainRect
   objectName: "DefaultMain_mainRect"
 
-  property string appTitle: "BRead Book Reader"
+  property string appTitle: "BuRid Book Reader"
   property real topReserve: 20  
   property string mainMenuButtonColor: "#b4a470"
   property string mainMenuButtonFade: "#fbdff7"
@@ -54,7 +54,7 @@ Rectangle {
     bookButton.visible = false
     titleBox.showTitle = false
     mainRect.topReserve = 0
-    loadHtml ("file:///home/bernd/myexperiments/bread/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
+    loadHtml ("file:///home/bernd/myexperiments/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
   }
   function hideReadBox () {
     bookViewRect.height = bookViewRect.hiddenHeight

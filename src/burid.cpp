@@ -1,4 +1,4 @@
-#include "bread.h"
+#include "burid.h"
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -25,10 +25,10 @@
 #include <QDebug>
 #include <QDesktopServices>
 
-namespace bread
+namespace burid
 {
 
-Bread::Bread (QWidget *parent)
+Burid::Burid (QWidget *parent)
   :QDeclarativeView (parent),
    app (0),
    qmlRoot (0)
@@ -36,26 +36,26 @@ Bread::Bread (QWidget *parent)
 }
 
 void
-Bread::Init (QApplication & qapp)
+Burid::Init (QApplication & qapp)
 {
   app = &qapp;
 }
 
 void
-Bread::AddConfigMessages (const QStringList & messages)
+Burid::AddConfigMessages (const QStringList & messages)
 {
   configMessages.append (messages);
 }
 
 void
-Bread::Run ()
+Burid::Run ()
 {
   setSource (QUrl("qrc:/DefaultMain.qml"));
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
   qmlRoot = rootObject();
   if (qmlRoot) {
     qmlRoot->setProperty ("appTitle",QString (
-             "<b>BRead</b><br>"
+             "<b>BuRid</b><br>"
               "Book Reader<br>"
              "<i>by Bernd Stramm</i>"));
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
@@ -67,7 +67,7 @@ Bread::Run ()
 }
 
 void
-Bread::Quit ()
+Burid::Quit ()
 {
   if (app) {
     app->quit ();

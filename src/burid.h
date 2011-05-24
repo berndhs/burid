@@ -1,5 +1,5 @@
-#ifndef BREAD_BREAD_H
-#define BREAD_BREAD_H
+#ifndef BURID_BURID_H
+#define BURID_BURID_H
 
 
 /****************************************************************
@@ -29,14 +29,14 @@
 #include <QApplication>
 #include <QGraphicsObject>
 
-namespace bread
+namespace burid
 {
-class Bread: public QDeclarativeView
+class Burid: public QDeclarativeView
 {
 Q_OBJECT
 public:
 
-  Bread (QWidget *parent=0);
+  Burid (QWidget *parent=0);
 
   void Init (QApplication & qapp);
   void AddConfigMessages (const QStringList & messages);

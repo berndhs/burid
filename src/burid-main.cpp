@@ -1,5 +1,5 @@
 
-#include "bread-main.h"
+#include "burid-main.h"
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -28,7 +28,7 @@
 #include "deliberate.h"
 #include "version.h"
 #include "cmdoptions.h"
-#include "bread.h"
+#include "burid.h"
 
 #include <QDebug>
 
@@ -37,9 +37,9 @@ int
 main (int argc, char *argv[])
 {
   QCoreApplication::setOrganizationName ("BerndStramm");
-  QCoreApplication::setOrganizationDomain ("bread.sourceforge.net");
-  QCoreApplication::setApplicationName ("bread");
-  deliberate::ProgramVersion pv ("BRead");
+  QCoreApplication::setOrganizationDomain ("burid.sourceforge.net");
+  QCoreApplication::setApplicationName ("burid");
+  deliberate::ProgramVersion pv ("BuRid");
   QCoreApplication::setApplicationVersion (pv.ShortVersion());
 
   QApplication  app (argc, argv);
@@ -52,7 +52,7 @@ main (int argc, char *argv[])
 
   QStringList  configMessages;
 
-  deliberate::CmdOptions  opts ("bread");
+  deliberate::CmdOptions  opts ("burid");
 
   bool optsOk = opts.Parse (argc, argv);
   if (!optsOk) {
@@ -75,7 +75,7 @@ main (int argc, char *argv[])
   bool showDebug = opts.SeenOpt ("debug");
   int result;
 
-  bread::Bread   bread;
+  burid::Burid   burid;
 
   QIcon appIcon ;
   appIcon.addFile (QString (":/images/icon256.png"), QSize (256,256));
@@ -87,10 +87,10 @@ main (int argc, char *argv[])
   qDebug () << __PRETTY_FUNCTION__ << " loaded icon null " << appIcon.isNull();
   qDebug () << __PRETTY_FUNCTION__ << "   sizes " << appIcon.availableSizes();
   app.setWindowIcon (appIcon);
-  bread.setWindowIcon (appIcon);
-  bread.Init (app);
-  bread.AddConfigMessages (configMessages);
-  bread.Run ();
+  burid.setWindowIcon (appIcon);
+  burid.Init (app);
+  burid.AddConfigMessages (configMessages);
+  burid.Run ();
   result = app.exec ();
   return result;
 }
