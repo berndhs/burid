@@ -7,11 +7,47 @@ Rectangle {
   property alias bookUrl: bookView.url
   clip: true
 
+
+  Rectangle {
+    id: pageControlRect
+    color: "transparent"
+    height: 32
+    width: parent.width
+    z: parent.z+1
+    anchors {
+      horizontalCenter: parent.horizontalCenter
+      bottom: parent.bottom
+    }
+    Row {
+      spacing: 16
+      anchors.centerIn: parent
+      ChoiceButton {
+        id: backButton
+        height: pageControlRect.height
+        opacity: 0.7
+        labelText: qsTr ("back")
+        onClicked: { bookViewFlick.pageUp () }
+      }
+      ChoiceButton {
+        id: forwardButton
+        height: pageControlRect.height
+        opacity: 0.7
+        labelText: qsTr ("forward")
+        onClicked: { bookViewFlick.pageDown () }
+      }
+    }
+  }
   Flickable {
  
     id: bookViewFlick
     height: parent.height
     width: parent.width
+    function pageDown () {
+      bookViewFlick.contentY += bookViewFlick.height * 0.9 
+    }
+    function pageUp () {
+      bookViewFlick.contentY -= bookViewFlick.height * 0.9 
+    }
 
     WebView {
       id: bookView
@@ -34,9 +70,9 @@ Rectangle {
          else if (event.key == Qt.Key_Minus) {bookView.contentsScale -= 0.1 }
          else if (event.key == Qt.Key_0) {bookView.contentsScale = origScale }
          else if (event.key == Qt.Key_PageUp) {
-           bookViewFlick.contentY -= bookViewFlick.height * 0.9 
+           bookViewFlick.pageUp ()
          } else if (event.key == Qt.Key_PageDown) {
-           bookViewFlick.contentY += bookViewFlick.height * 0.9 
+           bookViewFlick.pageDown ()
          }
       }
       preferredWidth: bookViewBox.width

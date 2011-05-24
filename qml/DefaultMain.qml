@@ -54,7 +54,7 @@ Rectangle {
     bookButton.visible = false
     titleBox.showTitle = false
     mainRect.topReserve = 0
-    loadHtml ("file:///home/bernd/myexperiments/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
+    loadHtml ("file:///home/bernd/mywork/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
   }
   function hideReadBox () {
     bookViewRect.height = bookViewRect.hiddenHeight
