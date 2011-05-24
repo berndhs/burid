@@ -52,7 +52,10 @@ Bread::Run ()
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
   qmlRoot = rootObject();
   if (qmlRoot) {
-    qmlRoot->setProperty ("appText",QString ("BRead Book Reader"));
+    qmlRoot->setProperty ("appTitle",QString (
+             "<b>BRead</b><br>"
+              "Book Reader<br>"
+             "<i>by Bernd Stramm</i>"));
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
   }
   show ();

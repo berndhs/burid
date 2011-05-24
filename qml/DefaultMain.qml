@@ -32,6 +32,9 @@ Rectangle {
   signal quitApp ()
   signal startReading ()
 
+  function loadHtml (theUrl) {
+    bookContentView.bookUrl = theUrl
+  }
   function readBook () {
     showReadBox ()
     startReading ()
@@ -41,11 +44,22 @@ Rectangle {
   }
   function showReadBox () {
     bookViewRect.height = bookViewRect.visibleHeight
+    bookViewRect.bookVisible = true
     titleBox.height = titleBox.hiddenHeight
+    stopButton.visible = true
+    bookButton.visible = false
+    titleBox.showTitle = false
+    mainRect.topReserve = 0
+    loadHtml ("file:///home/bernd/myexperiments/bread/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
   }
   function hideReadBox () {
     bookViewRect.height = bookViewRect.hiddenHeight
+    bookViewRect.bookVisible = false
     titleBox.height = titleBox.visibleHeight
+    stopButton.visible = false
+    bookButton.visible = true
+    titleBox.showTitle = true
+    mainRect.topReserve = 20
   }
 
   width: 600
@@ -57,7 +71,9 @@ Rectangle {
     width: parent.width * 0.75
     property real visibleHeight: parent.height * 0.25
     property real hiddenHeight: 0
+    property bool showTitle: true
     height: visibleHeight
+    radius: 16
     anchors {
       horizontalCenter: parent.horizontalCenter
       top: parent.top
@@ -66,8 +82,10 @@ Rectangle {
     color: "#f7f7f7"
     Text { 
       anchors.centerIn: parent
+      visible: titleBox.showTitle
       style: Text.Sunken
       wrapMode: Text.Wrap
+      horizontalAlignment: Text.AlignHCenter
       text: mainRect.appTitle
     }
     Behavior  on height {
@@ -92,6 +110,7 @@ Rectangle {
       spacing: 4
       ChoiceButton {
         id: bookButton
+        visible: true
         height: buttonRowRect.buttonHeight
         labelText: qsTr ("Read Books")
         onClicked: {
@@ -100,6 +119,7 @@ Rectangle {
       }
       ChoiceButton {
         id: stopButton
+        visible: false
         height: buttonRowRect.buttonHeight
         labelText: qsTr ("Stop Reading")
         onClicked: {
@@ -115,16 +135,22 @@ Rectangle {
         }
       }
     }
-
   }
 
   Rectangle {
     id: bookViewRect
     width: parent.width
-    property real visibleHeight: parent.height - buttonRowRect.height - titleBox.height - parent.topReserve
+    property real visibleHeight: parent.height - buttonRowRect.height - parent.topReserve
     property real hiddenHeight: 0
+    property bool bookVisible: false
+
+    function ensureHeight () {
+      visibleHeight = parent.height - buttonRowRect.height - parent.topReserve
+      if (bookVisible) { height = visibleHeight }
+    }
+
     height: hiddenHeight
-    color: "lightblue"
+    color: "#f0f0ff"
     anchors {
       top: buttonRowRect.bottom
       left: parent.left
@@ -132,6 +158,19 @@ Rectangle {
     Behavior  on height {
       NumberAnimation { duration: 250 }
     }
+    BookView {
+      id: bookContentView
+      width: parent.width
+      height: parent.height
+      anchors.horizontalCenter: parent.horizontalCenter
+      color: "transparent"
+      visible: bookViewRect.bookVisible
+    }
+  }
+
+  onHeightChanged: {
+    console.log ("Height changed to " + height)
+    bookViewRect.ensureHeight()
   }
   Component.onCompleted: {
     console.log ("done loaded main component!")
