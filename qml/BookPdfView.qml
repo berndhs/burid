@@ -1,5 +1,3 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
 
 
 /****************************************************************
@@ -23,40 +21,18 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
+import QtQuick 1.0
 
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include <poppler/qt4/poppler-qt4.h>
+Rectangle {
+  color: "red"
+  Text { anchors.centerIn: parent; text: "PDF space" }
+  Flickable {
+    id: pageFlick
+    Image {
+      height: parent.height
+      width: parent.width
+      fillMode: Image.PreserveAspectCrop
+    }
+  }
+}
 
-namespace burid
-{
-class Burid: public QDeclarativeView
-{
-Q_OBJECT
-public:
-
-  Burid (QWidget *parent=0);
-
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
-
-public slots:
-
-  void Quit ();
-
-private:
-
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
-
-  Poppler::Document   *poppdoc;
-
-};
-
-} // namespace
-
-#endif

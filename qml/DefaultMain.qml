@@ -34,34 +34,53 @@ Rectangle {
 
 
   signal quitApp ()
-  signal startReading ()
+  signal startReadEpub ()
+  signal startReadPdf ()
 
   function loadHtml (theUrl) {
-    bookContentView.bookUrl = theUrl
+    bookWebContentView.bookUrl = theUrl
+  }
+  function loadPdf (thePage) {
+    bookPdfContentView.pageImage = thePage
   }
   function readBook () {
-    showReadBox ()
-    startReading ()
+    showReadBox ("html")
+    startReadEpub ()
+  }
+  function readPdf () {
+    showReadBox ("pdf")
+    startReadPdf ()
   }
   function stopReading () {
     hideReadBox ()
   }
-  function showReadBox () {
-    bookViewRect.height = bookViewRect.visibleHeight
-    bookViewRect.bookVisible = true
+  function showReadBox (theFormat) {
+    if (theFormat == "html") {
+      bookWebViewRect.show ()
+      bookPdfViewRect.hide ()
+    } else if (theFormat == "pdf") {
+      bookWebViewRect.hide ()
+      bookPdfViewRect.show ()
+    }
     titleBox.height = titleBox.hiddenHeight
     stopButton.visible = true
-    bookButton.visible = false
+    bookEpubButton.visible = false
+    bookPdfButton.visible = false
     titleBox.showTitle = false
     mainRect.topReserve = 0
-    loadHtml ("file:///home/bernd/mywork/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
+    if (theFormat == "html") {
+      loadHtml ("file:///home/bernd/mywork/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
+    } else if (theFormat == "pdf") {
+      loadPdfFile ("")
+    }
   }
   function hideReadBox () {
-    bookViewRect.height = bookViewRect.hiddenHeight
-    bookViewRect.bookVisible = false
+    bookWebViewRect.hide ()
+    bookPdfViewRect.hide ()
     titleBox.height = titleBox.visibleHeight
     stopButton.visible = false
-    bookButton.visible = true
+    bookEpubButton.visible = true
+    bookPdfButton.visible = true
     titleBox.showTitle = true
     mainRect.topReserve = 20
   }
@@ -118,14 +137,25 @@ Rectangle {
       anchors.centerIn: parent
       spacing: parent.width * 0.1
       ChoiceButton {
-        id: bookButton
+        id: bookEpubButton
         visible: true
         height: buttonRowRect.buttonHeight
         radius: height * 0.5
-        labelText: qsTr ("Read Books")
+        labelText: qsTr ("Read EPub")
         gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.readBook ()
+        }
+      }
+      ChoiceButton {
+        id: bookPdfButton
+        visible: true
+        height: buttonRowRect.buttonHeight
+        radius: height * 0.5
+        labelText: qsTr ("Read Pdf")
+        gradient: mainMenuButtonGradient
+        onClicked: {
+          mainRect.readPdf ()
         }
       }
       ChoiceButton {
@@ -153,12 +183,20 @@ Rectangle {
   }
 
   Rectangle {
-    id: bookViewRect
+    id: bookWebViewRect
     width: parent.width
     property real visibleHeight: parent.height - buttonRowRect.height - parent.topReserve
     property real hiddenHeight: 0
     property bool bookVisible: false
 
+    function show () {
+      height = visibleHeight
+      bookVisible = true
+    }
+    function hide () {
+      height = 0
+      bookVisible = false
+    }
     function ensureHeight () {
       visibleHeight = parent.height - buttonRowRect.height - parent.topReserve
       if (bookVisible) { height = visibleHeight }
@@ -173,19 +211,59 @@ Rectangle {
     Behavior  on height {
       NumberAnimation { duration: 250 }
     }
-    BookView {
-      id: bookContentView
+    BookWebView {
+      id: bookWebContentView
       width: parent.width
       height: parent.height
       anchors.horizontalCenter: parent.horizontalCenter
       color: "transparent"
-      visible: bookViewRect.bookVisible
+      visible: bookWebViewRect.bookVisible
+    }
+  }
+
+  Rectangle {
+    id: bookPdfViewRect
+    width: parent.width
+    property real visibleHeight: parent.height - buttonRowRect.height - parent.topReserve
+    property real hiddenHeight: 0
+    property bool bookVisible: false
+    
+    function show () {
+      height = visibleHeight
+      bookVisible = true
+    }
+    function hide () {
+      height = 0
+      bookVisible = false
+    }
+    function ensureHeight () {
+      visibleHeight = parent.height - buttonRowRect.height - parent.topReserve
+      if (bookVisible) { height = visibleHeight }
+    }    
+
+    height: hiddenHeight
+    color: "#f7f0f0"
+    anchors {
+      top: buttonRowRect.bottom
+      left: parent.left
+    }
+    Behavior  on height {
+      NumberAnimation { duration: 250 }
+    }
+    BookPdfView {
+      id: bookPdfContentView
+      width: parent.width
+      height: parent.height
+      anchors.horizontalCenter: parent.horizontalCenter
+      color: "transparent"
+      visible: bookPdfViewRect.bookVisible
     }
   }
 
   onHeightChanged: {
     console.log ("Height changed to " + height)
-    bookViewRect.ensureHeight()
+    bookWebViewRect.ensureHeight()
+    bookPdfViewRect.ensureHeight()
   }
   Component.onCompleted: {
     console.log ("done loaded main component!")

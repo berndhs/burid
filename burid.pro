@@ -28,7 +28,11 @@ MYNAME = burid
 TEMPLATE = app
 
 QT += core gui sql webkit network xml declarative
+
 CONFIG += debug_and_release
+
+CONFIG += pkgconfig
+PKGCONFIG += poppler-qt4
 
 MAKEFILE = Make_$${MYNAME}
 !include ("options.pri") {
