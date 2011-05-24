@@ -33,12 +33,14 @@ all: $(MAKEFILE)
 clean: $(MAKEFILE) FORCE
 	$(MAKE) -f $(MAKEFILE) clean
 
+
 fresh: clean all
 
 distclean: $(MAKEFILE) FORCE
 	$(MAKE) -f $(MAKEFILE) distclean
 	rm -f $(MAKEFILE)
 	rm -f $(TOP_MAKEFILE)
+	rm -f options.pri
 	
 debug: $(MAKEFILE) FORCE
 	$(MAKE) -f $(MAKEFILE) debug
