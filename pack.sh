@@ -1,12 +1,12 @@
 #!/bin/bash
 
-NAME=bread
+NAME=burid
 CHANGELOG=${NAME}.changes
 DESKTOP=${NAME}.desktop
 VERSION=`grep "ProgramVersion::VersionNumber" src/version.cpp \
         | awk '{print $3;}' \
         | sed s/[\(\"\;\)]//g`
-PACKDIR=${HOME}/packaging/carpo
+PACKDIR=${HOME}/packaging/burid
 
 makearchive.sh ${NAME}-${VERSION} master
 cp ${NAME}-${VERSION}.tar.gz ${PACKDIR}
