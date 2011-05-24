@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<package xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="id">
+  <metadata>
+    <dc:rights>Public domain in the USA.</dc:rights>
+    <dc:identifier id="id" opf:scheme="URI">http://www.gutenberg.org/ebooks/164</dc:identifier>
+    <dc:creator opf:file-as="Verne, Jules">Jules Verne</dc:creator>
+    <dc:title>Twenty Thousand Leagues under the Sea</dc:title>
+    <dc:language xsi:type="dcterms:RFC4646">en</dc:language>
+    <dc:subject>Science fiction</dc:subject>
+    <dc:subject>Submarines (Ships) -- Fiction</dc:subject>
+    <dc:subject>Sea stories</dc:subject>
+    <dc:date opf:event="publication">1994-09-01</dc:date>
+    <dc:date opf:event="conversion">2010-02-14T21:18:07.396194+00:00</dc:date>
+    <dc:source>http://www.gutenberg.org/files/164/164-h/164-h.htm</dc:source>
+    <meta content="item5" name="cover"/>
+  </metadata>
+  <manifest>
+    <item href="pgepub.css" id="item1" media-type="text/css"/>
+    <item href="0.css" id="item2" media-type="text/css"/>
+    <item href="1.css" id="item3" media-type="text/css"/>
+    <item href="www.gutenberg.org@files@164@164-h@164-h-0.htm" id="item4" media-type="application/xhtml+xml"/>
+    <item href="www.gutenberg.org@files@164@164-h@164-h-1.htm" id="pgepubid00042" media-type="application/xhtml+xml"/>
+    <item href="www.gutenberg.org@files@164@164-h@164-h-2.htm" id="pgepubid00071" media-type="application/xhtml+xml"/>
+    <item href="www.gutenberg.org@files@164@164-h@164-h-3.htm" id="pgepubid00099" media-type="application/xhtml+xml"/>
+    <item href="cover.jpg" id="item5" media-type="image/jpeg"/>
+    <item href="toc.ncx" id="ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="item4" linear="yes"/>
+    <itemref idref="pgepubid00042" linear="yes"/>
+    <itemref idref="pgepubid00071" linear="yes"/>
+    <itemref idref="pgepubid00099" linear="yes"/>
+  </spine>
+  <guide>
+    <reference href="cover.jpg" type="cover" title="Cover Image"/>
+    <reference href="www.gutenberg.org@files@164@164-h@164-h-0.htm#pgepubid00003" type="toc" title="CONTENTS"/>
+  </guide>
+</package>

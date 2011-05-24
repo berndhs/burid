@@ -1,0 +1,3 @@
+Empty Book
+----------
+This is a book with no content
