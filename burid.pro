@@ -33,6 +33,7 @@ CONFIG += debug_and_release
 MAKEFILE = Make_$${MYNAME}
 !include ("options.pri") {
   message ("no options.pri, using defaults")
+  MAKEFILE = Makefile
 }
 
 CONFIG(debug, debug|release) {
@@ -77,3 +78,12 @@ SOURCES = \
           src/deliberate.cpp \
           src/version.cpp \
 
+
+unix:!symbian {
+    meego5 {
+        target.path = /opt/usr/bin
+    } else {
+        target.path = /usr/local/bin
+    }
+    INSTALLS += target
+}
