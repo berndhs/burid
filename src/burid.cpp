@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QDeclarativeEngine>
 
 namespace burid
 {
@@ -56,14 +57,23 @@ Burid::Run ()
   if (qmlRoot) {
     qmlRoot->setProperty ("appTitle",QString (
              "<b>BuRid</b><br>"
-              "Book Reader<br>"
-             "<i>by Bernd Stramm</i>"));
+              "Book Reader<br><br>"
+             "by <i>Bernd Stramm</i>"));
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
   }
   show ();
   qDebug () << __PRETTY_FUNCTION__ << " docs location "
             << QDesktopServices::storageLocation (QDesktopServices::DocumentsLocation);
   qDebug () << __PRETTY_FUNCTION__ << qmlRoot->objectName();
+  QObject * pdfImage = qmlRoot->findChild<QObject*> ("PdfPageImage");
+  qDebug () << "            " << pdfImage;
+  QDeclarativeEngine * dengine = engine();
+  qDebug () << __PRETTY_FUNCTION__ << " engine " << dengine;
+  if (dengine) {
+    dengine->addImageProvider(QString("pdfpager"),&pdfPager);
+    qDebug () << "   image providers " << dengine->imageProvider (QString("pdfpager"));
+    qDebug () << "   pdf pager       " << &pdfPager;
+  }
 }
 
 void

@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QGraphicsObject>
 #include <poppler/qt4/poppler-qt4.h>
+#include "pdf-pager.h"
 
 namespace burid
 {
@@ -54,6 +55,7 @@ private:
   QGraphicsObject  *qmlRoot;
 
   Poppler::Document   *poppdoc;
+  PdfPager             pdfPager;
 
 };
 

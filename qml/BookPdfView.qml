@@ -24,11 +24,55 @@
 import QtQuick 1.0
 
 Rectangle {
+  id: bookPdfViewRect
   color: "red"
+  property string providerName: ""
   Text { anchors.centerIn: parent; text: "PDF space" }
+  clip: true
+
+  function loadPdfFile (thePageFile) {
+    pageImage.source = thePageFile
+  }
+  function loadImage (theName) {
+    console.log ("load Image " + providerName + "  / " + theName)
+    pageImage.source = "image://" + providerName + "/" + theName
+  }
+
+  Rectangle {
+    id: pageControlRect
+    color: "transparent"
+    height: 32
+    width: parent.width
+    z: parent.z+1
+    anchors {
+      horizontalCenter: parent.horizontalCenter
+      bottom: parent.bottom
+    }
+    Row {
+      spacing: 16
+      anchors.centerIn: parent
+      ChoiceButton {
+        id: backButton
+        height: pageControlRect.height
+        opacity: 0.7
+        labelText: qsTr ("back")
+        onClicked: { bookPdfViewRect.loadImage ("back") }
+      }
+      ChoiceButton {
+        id: forwardButton
+        height: pageControlRect.height
+        opacity: 0.7
+        labelText: qsTr ("forward")
+        onClicked: { bookPdfViewRect.loadImage ("forward") }
+      }
+    }
+  }
+
   Flickable {
     id: pageFlick
     Image {
+      id: pageImage
+      objectName: "PdfPageImage"
       height: parent.height
       width: parent.width
       fillMode: Image.PreserveAspectCrop

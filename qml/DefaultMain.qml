@@ -41,7 +41,7 @@ Rectangle {
     bookWebContentView.bookUrl = theUrl
   }
   function loadPdf (thePage) {
-    bookPdfContentView.pageImage = thePage
+    bookPdfContentView.loadImage (thePage)
   }
   function readBook () {
     showReadBox ("html")
@@ -71,7 +71,7 @@ Rectangle {
     if (theFormat == "html") {
       loadHtml ("file:///home/bernd/mywork/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
     } else if (theFormat == "pdf") {
-      loadPdfFile ("")
+      loadPdf ("start")
     }
   }
   function hideReadBox () {
@@ -257,6 +257,7 @@ Rectangle {
       anchors.horizontalCenter: parent.horizontalCenter
       color: "transparent"
       visible: bookPdfViewRect.bookVisible
+      providerName: "pdfpager"
     }
   }
 

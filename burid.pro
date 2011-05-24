@@ -69,6 +69,7 @@ FORMS = \
 HEADERS = \
           src/$${MYNAME}-main.h \
           src/$${MYNAME}.h \
+          src/pdf-pager.h \
           src/gpl2.h \
           src/cmdoptions.h \
           src/deliberate.h \
@@ -78,6 +79,7 @@ HEADERS = \
 SOURCES = \
           src/$${MYNAME}-main.cpp \
           src/$${MYNAME}.cpp \
+          src/pdf-pager.cpp \
           src/cmdoptions.cpp \
           src/deliberate.cpp \
           src/version.cpp \
