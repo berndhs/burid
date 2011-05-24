@@ -25,9 +25,13 @@ import QtQuick 1.0
 
 Rectangle {
   id: mainRect
+  objectName: "DefaultMain_mainRect"
 
   property string appTitle: "BRead Book Reader"
-  property real topReserve: 20
+  property real topReserve: 20  
+  property string mainMenuButtonColor: "#b4a470"
+  property string mainMenuButtonFade: "#fbdff7"
+
 
   signal quitApp ()
   signal startReading ()
@@ -104,15 +108,22 @@ Rectangle {
       topMargin: 4
       horizontalCenter: mainRect.horizontalCenter
     }
+    Gradient {
+      id: mainMenuButtonGradient
+      GradientStop { position: 0.0; color: mainMenuButtonColor }
+      GradientStop { position: 1.0; color: mainMenuButtonFade }
+    }
 
     Row {
       anchors.centerIn: parent
-      spacing: 4
+      spacing: parent.width * 0.1
       ChoiceButton {
         id: bookButton
         visible: true
         height: buttonRowRect.buttonHeight
+        radius: height * 0.5
         labelText: qsTr ("Read Books")
+        gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.readBook ()
         }
@@ -121,7 +132,9 @@ Rectangle {
         id: stopButton
         visible: false
         height: buttonRowRect.buttonHeight
+        radius: height * 0.5
         labelText: qsTr ("Stop Reading")
+        gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.stopReading ()
         }
@@ -129,7 +142,9 @@ Rectangle {
       ChoiceButton {
         id: quitButton
         height: buttonRowRect.buttonHeight
+        radius: height * 0.5
         labelText: qsTr ("Quit")
+        gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.quitApp ()
         }

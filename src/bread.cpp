@@ -22,6 +22,8 @@
  ****************************************************************/
 
 #include <QUrl>
+#include <QDebug>
+#include <QDesktopServices>
 
 namespace bread
 {
@@ -59,6 +61,9 @@ Bread::Run ()
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
   }
   show ();
+  qDebug () << __PRETTY_FUNCTION__ << " docs location "
+            << QDesktopServices::storageLocation (QDesktopServices::DocumentsLocation);
+  qDebug () << __PRETTY_FUNCTION__ << qmlRoot->objectName();
 }
 
 void

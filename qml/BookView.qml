@@ -35,10 +35,8 @@ Rectangle {
          else if (event.key == Qt.Key_0) {bookView.contentsScale = origScale }
          else if (event.key == Qt.Key_PageUp) {
            bookViewFlick.contentY -= bookViewFlick.height * 0.9 
-           console.log ("Up by " + bookViewFlick.height  * 0.9)
          } else if (event.key == Qt.Key_PageDown) {
            bookViewFlick.contentY += bookViewFlick.height * 0.9 
-           console.log ("Down by " + bookViewFlick.height  * 0.9)
          }
       }
       preferredWidth: bookViewBox.width
