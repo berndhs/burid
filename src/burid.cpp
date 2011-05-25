@@ -63,6 +63,7 @@ Burid::Run ()
               "Book Reader<br><br>"
              "by <i>Bernd Stramm</i>"));
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
+    connect (qmlRoot, SIGNAL (startReadPdf()), this, SLOT (startPdf()));
   }
   show ();
   qDebug () << __PRETTY_FUNCTION__ << " docs location "
@@ -82,6 +83,18 @@ Burid::Run ()
     dcontext->setContextProperty ("pdfPagerIF",&pdfPager);
     dcontext->setContextProperty ("epubDocIF",&epubDoc);
   }
+}
+
+void
+Burid::startPdf ()
+{
+  qDebug () << __PRETTY_FUNCTION__;
+  pdfPager.LoadPDF ("data/pdf/control_arxiv.pdf");
+}
+
+void
+Burid::startEpub ()
+{
 }
 
 void

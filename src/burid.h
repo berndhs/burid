@@ -48,6 +48,11 @@ public slots:
 
   void Quit ();
 
+private slots:
+
+  void startPdf ();
+  void startEpub ();
+
 private:
 
   QApplication     *app;

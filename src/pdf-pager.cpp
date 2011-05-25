@@ -41,12 +41,38 @@ void
 PdfPager::LoadPDF (const QString & filename)
 {
   poppDoc = Poppler::Document::load (filename);
+  qDebug () << __PRETTY_FUNCTION__ << filename << poppDoc;
+  pagenum = 0;
+  if (poppDoc) {
+    pagemax = poppDoc->numPages() - 1;
+  } else {
+    pagemax = 0;
+  }
 }
 
 void 
 PdfPager::LoadPDFfromData (const QByteArray & pdfData)
 {
   poppDoc = Poppler::Document::loadFromData (pdfData);
+  pagenum = 0;
+  if (poppDoc) {
+    pagemax = poppDoc->numPages() - 1;
+  } else {
+    pagemax = 0;
+  }
+}
+
+QImage
+PdfPager::PageImage (Poppler::Document * pdoc, int pnum)
+{
+  qDebug () << __PRETTY_FUNCTION__ << pdoc << pnum;
+  if (pdoc && (0 <= pnum) && (pnum < pdoc->numPages())) {
+    Poppler::Page * page = pdoc->page (pnum);
+    if (page) {
+      return page->renderToImage ();
+    }
+  }
+  return QImage();
 }
 
 QImage
@@ -60,11 +86,18 @@ PdfPager::requestImage (const QString & id,
   QImage iconForward (QString("./images/icon256.png"));
   QImage returnImage;
   if (id.startsWith (QString("start_"))) {
-    returnImage = iconStart;
+    pagenum = 0;
+    returnImage = PageImage (poppDoc, pagenum);
   } else if (id.startsWith (QString ("back_"))) {
-    returnImage = iconBack;
+    if (pagenum > 0) { 
+      pagenum--; 
+    }
+    returnImage = PageImage (poppDoc, pagenum);
   } else if (id.startsWith (QString ("forward_"))) {
-    returnImage = iconForward;
+    if (pagenum < pagemax) {
+      pagenum++;
+    }
+    returnImage = PageImage (poppDoc, pagenum);
   }
   if (requestedSize.isValid()) {
     returnImage = returnImage.scaled (requestedSize.width(),requestedSize.height());

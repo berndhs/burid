@@ -50,7 +50,11 @@ public:
 
 private:
 
+  QImage PageImage (Poppler::Document * pdoc, int pnum);
+
   Poppler::Document    *poppDoc;
+  int                   pagenum;
+  int                   pagemax;
 
   static int pagecount;
 

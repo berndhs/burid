@@ -44,12 +44,14 @@ Rectangle {
     bookPdfContentView.loadImage (thePage)
   }
   function readBook () {
-    showReadBox ("html")
     startReadEpub ()
+    console.log (" DefaultMain readBook")
+    showReadBox ("html")
   }
   function readPdf () {
-    showReadBox ("pdf")
     startReadPdf ()
+    console.log (" DefaultMain readPdf")
+    showReadBox ("pdf")
   }
   function stopReading () {
     hideReadBox ()
