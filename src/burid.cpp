@@ -33,7 +33,9 @@ namespace burid
 Burid::Burid (QWidget *parent)
   :QDeclarativeView (parent),
    app (0),
-   qmlRoot (0)
+   qmlRoot (0),
+   epubDoc (this),
+   pdfPager (this)
 {
 }
 
@@ -78,6 +80,7 @@ Burid::Run ()
   QDeclarativeContext * dcontext = rootContext();
   if (dcontext) {
     dcontext->setContextProperty ("pdfPagerIF",&pdfPager);
+    dcontext->setContextProperty ("epubDocIF",&epubDoc);
   }
 }
 

@@ -44,9 +44,11 @@ Rectangle {
     width: parent.width
     function pageDown () {
       bookViewFlick.contentY += bookViewFlick.height * 0.9 
+      console.log (" down is " + epubDocIF.nextPage ("down",1))
     }
     function pageUp () {
       bookViewFlick.contentY -= bookViewFlick.height * 0.9 
+      console.log (" down is " + epubDocIF.nextPage ("up",1))
     }
 
     WebView {

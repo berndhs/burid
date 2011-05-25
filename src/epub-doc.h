@@ -1,5 +1,5 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
+#ifndef BURID_EPUB_DOC_H
+#define BURID_EPUB_DOC_H
 
 
 /****************************************************************
@@ -24,40 +24,23 @@
  ****************************************************************/
 
 
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include "epub-doc.h"
-#include "pdf-pager.h"
+#include <QObject>
+#include <QString>
 
 namespace burid
 {
-class Burid: public QDeclarativeView
+
+class EpubDoc: public QObject 
 {
 Q_OBJECT
+
 public:
 
-  Burid (QWidget *parent=0);
+  EpubDoc (QObject *parent=0);
+  Q_INVOKABLE QString nextPage (const QString & direction, int offset);
+  Q_INVOKABLE QString startPage ();
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
-
-public slots:
-
-  void Quit ();
-
-private:
-
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
-
-  EpubDoc              epubDoc;
-  PdfPager             pdfPager;
-
-};
+}; 
 
 } // namespace
 

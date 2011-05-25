@@ -31,7 +31,7 @@ QT += core gui sql webkit network xml declarative
 
 CONFIG += debug_and_release
 
-CONFIG += pkgconfig
+CONFIG += link_pkgconfig
 PKGCONFIG += poppler-qt4
 
 MAKEFILE = Make_$${MYNAME}
@@ -70,6 +70,7 @@ HEADERS = \
           src/$${MYNAME}-main.h \
           src/$${MYNAME}.h \
           src/pdf-pager.h \
+          src/epub-doc.h \
           src/gpl2.h \
           src/cmdoptions.h \
           src/deliberate.h \
@@ -80,6 +81,7 @@ SOURCES = \
           src/$${MYNAME}-main.cpp \
           src/$${MYNAME}.cpp \
           src/pdf-pager.cpp \
+          src/epub-doc.cpp \
           src/cmdoptions.cpp \
           src/deliberate.cpp \
           src/version.cpp \

@@ -1,5 +1,4 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
+#include "epub-doc.h"
 
 
 /****************************************************************
@@ -23,42 +22,27 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
-
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include "epub-doc.h"
-#include "pdf-pager.h"
+#include <QDebug>
 
 namespace burid
 {
-class Burid: public QDeclarativeView
+EpubDoc::EpubDoc (QObject *parent)
+  :QObject (parent)
 {
-Q_OBJECT
-public:
+}
 
-  Burid (QWidget *parent=0);
+QString
+EpubDoc::nextPage (const QString & direction, int offset)
+{
+  qDebug () << __PRETTY_FUNCTION__ << direction << offset;
+  return direction + "_" + QString::number(offset);
+}
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
-
-public slots:
-
-  void Quit ();
-
-private:
-
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
-
-  EpubDoc              epubDoc;
-  PdfPager             pdfPager;
-
-};
+QString
+EpubDoc::startPage ()
+{
+  qDebug () << __PRETTY_FUNCTION__;
+  return QString ("start_");
+}
 
 } // namespace
-
-#endif
