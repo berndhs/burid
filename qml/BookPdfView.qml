@@ -30,12 +30,9 @@ Rectangle {
   Text { anchors.centerIn: parent; text: "PDF space" }
   clip: true
 
-  function loadPdfFile (thePageFile) {
-    pageImage.source = thePageFile
-  }
   function loadImage (theName) {
     console.log ("load Image " + providerName + "  / " + theName)
-    pageImage.source = "image://" + providerName + "/" + theName
+    pageFlick.loadImage ("image://" + providerName + "/" + theName)
     console.log ("    load progress " + pageImage.progress)
   }
 
@@ -75,7 +72,17 @@ Rectangle {
     height: parent.height
     width: parent.width
     interactive: true
-    
+    contentWidth: pageImage.width
+    contentHeight: pageImage.height
+    contentX: 0
+    contentY: 0
+
+    function loadImage (theImage) {
+      pageImage.source = theImage
+      contentX = 0
+      contentY = 0
+    }
+
     Image {
       id: pageImage
       z: parent.z + 1
