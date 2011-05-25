@@ -28,6 +28,8 @@
 #include <QStringList>
 #include <QApplication>
 #include <QGraphicsObject>
+#include <QTimer>
+#include <QResizeEvent>
 #include "epub-doc.h"
 #include "pdf-pager.h"
 
@@ -39,6 +41,7 @@ Q_OBJECT
 public:
 
   Burid (QWidget *parent=0);
+  ~Burid ();
 
   void Init (QApplication & qapp);
   void AddConfigMessages (const QStringList & messages);
@@ -53,15 +56,22 @@ private slots:
   void startPdf ();
   void startEpub ();
 
+  void periodicSave ();
+
+protected:
+
+  void resizeEvent (QResizeEvent * event);
+
 private:
 
   QApplication     *app;
   QStringList       configMessages;
   QGraphicsObject  *qmlRoot;
 
-  EpubDoc              epubDoc;
-  PdfPager             pdfPager;
+  //EpubDoc              epubDoc;
+  PdfPager             *pdfPager;
 
+  QTimer               saveTimer;
 };
 
 } // namespace

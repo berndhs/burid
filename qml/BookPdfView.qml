@@ -26,8 +26,9 @@ import QtQuick 1.0
 Rectangle {
   id: bookPdfViewRect
   color: "red"
+  width: 600
+  height: 600
   property string providerName: ""
-  Text { anchors.centerIn: parent; text: "PDF space" }
   clip: true
 
   function loadImage (theName) {
@@ -36,9 +37,40 @@ Rectangle {
     console.log ("    load progress " + pageImage.progress)
   }
 
+  Flickable {
+    id: pageFlick
+    height: parent.height
+    width: parent.width
+    anchors { top: parent.top; left: parent.left }
+    interactive: true
+    contentWidth: pageImage.width
+    contentHeight: pageImage.height
+    contentX: 0
+    contentY: 0
+
+    function loadImage (theImage) {
+      pageImage.source = theImage
+      contentX = 0
+      contentY = 0
+      contentWidth = pageImage.paintedWidth
+      contentHeight = pageImage.paintedHeight
+      console.log (" loaded image " + theImage )
+      console.log ("      cW " + contentWidth + "  cH " + contentHeight)
+      console.log ("      progress " + pageImage.progress)
+    }
+
+    Image {
+      id: pageImage
+      z: parent.z + 2
+      objectName: "PdfPageImage"
+      source: "empty.png"
+      asynchronous: false
+      fillMode: Image.PreserveAspectCrop
+    }
+  }
   Rectangle {
     id: pageControlRect
-    color: "lightblue"
+    color: "lightgreen"
     opacity: 0.7
     height: 32
     width: parent.width
@@ -67,30 +99,5 @@ Rectangle {
     }
   }
 
-  Flickable {
-    id: pageFlick
-    height: parent.height
-    width: parent.width
-    interactive: true
-    contentWidth: pageImage.width
-    contentHeight: pageImage.height
-    contentX: 0
-    contentY: 0
-
-    function loadImage (theImage) {
-      pageImage.source = theImage
-      contentX = 0
-      contentY = 0
-    }
-
-    Image {
-      id: pageImage
-      z: parent.z + 1
-      objectName: "PdfPageImage"
-      height: parent.height
-      width: parent.width
-      fillMode: Image.PreserveAspectCrop
-    }
-  }
 }
 

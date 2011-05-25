@@ -25,6 +25,8 @@
 
 
 #include <QDebug>
+#include <QLabel>
+#include <QPixmap>
 
 int burid::PdfPager::pagecount(1000);
 
@@ -34,6 +36,10 @@ PdfPager::PdfPager (QObject *parent)
   :QObject(parent),
    QDeclarativeImageProvider (QDeclarativeImageProvider::Image),
    poppDoc (0)
+{
+}
+
+PdfPager::~PdfPager ()
 {
 }
 
@@ -48,6 +54,27 @@ PdfPager::LoadPDF (const QString & filename)
   } else {
     pagemax = 0;
   }
+}
+
+QStringList
+PdfPager::infoKeys ()
+{
+  if (poppDoc) {
+    return poppDoc->infoKeys();
+  } else {
+    QStringList list;
+    list << "No Document";
+    return list;
+  }
+}
+
+QString
+PdfPager::info (const QString & key)
+{
+  if (poppDoc) {
+    return poppDoc->info(key);
+  }
+  return QString();
 }
 
 void 
@@ -99,9 +126,7 @@ PdfPager::requestImage (const QString & id,
     }
     returnImage = PageImage (poppDoc, pagenum);
   }
-  if (requestedSize.isValid()) {
-    returnImage = returnImage.scaled (requestedSize.width(),requestedSize.height());
-  }
+  qDebug () << "              incoming size " << *size;
   if (size) {
     *size = returnImage.size();
   }

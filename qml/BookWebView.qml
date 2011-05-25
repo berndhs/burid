@@ -42,6 +42,8 @@ Rectangle {
     id: bookViewFlick
     height: parent.height
     width: parent.width
+    contentWidth: bookView.width
+    contentHeight: bookView.height
     function pageDown () {
       bookViewFlick.contentY += bookViewFlick.height * 0.9 
       console.log (" down is " + epubDocIF.nextPage ("down",1))

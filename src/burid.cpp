@@ -26,6 +26,9 @@
 #include <QDesktopServices>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include "deliberate.h"
+
+using namespace deliberate;
 
 namespace burid
 {
@@ -34,9 +37,43 @@ Burid::Burid (QWidget *parent)
   :QDeclarativeView (parent),
    app (0),
    qmlRoot (0),
-   epubDoc (this),
-   pdfPager (this)
+   //epubDoc (this),
+   pdfPager (0),
+   saveTimer (this)
 {
+  setResizeMode (QDeclarativeView::SizeRootObjectToView);
+  pdfPager = new PdfPager (0);
+  QSize curSize = Settings ().value ("+size", size()).toSize();
+  qDebug () << " want size " << curSize;
+  resize (curSize);
+  qDebug () << " ------------- forced size " << size();
+  connect (&saveTimer, SIGNAL (timeout()), this, SLOT (periodicSave()));
+  saveTimer.start (60*1000); // minute
+  QTimer::singleShot (3*1000, this, SLOT (periodicSave()));
+}
+
+Burid::~Burid ()
+{
+  qDebug () << __PRETTY_FUNCTION__ << " That's all folks";
+  if (qmlRoot) {
+    disconnect (qmlRoot, 0,0,0);
+  }
+  delete pdfPager;
+}
+
+void
+Burid::resizeEvent (QResizeEvent * event)
+{
+  qDebug () << "Resize to " << event->size();
+  QDeclarativeView::resizeEvent (event);
+}
+
+void
+Burid::periodicSave ()
+{
+  Settings().setValue ("+size",size());
+  Settings().sync();
+  qDebug () << __PRETTY_FUNCTION__;
 }
 
 void
@@ -56,6 +93,9 @@ Burid::Run ()
 {
   setSource (QUrl("qrc:/DefaultMain.qml"));
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
+  QSize curSize = Settings ().value ("+size", size()).toSize();
+  qDebug () << " want size " << curSize;
+  resize (curSize);
   qmlRoot = rootObject();
   if (qmlRoot) {
     qmlRoot->setProperty ("appTitle",QString (
@@ -74,14 +114,14 @@ Burid::Run ()
   QDeclarativeEngine * dengine = engine();
   qDebug () << __PRETTY_FUNCTION__ << " engine " << dengine;
   if (dengine) {
-    dengine->addImageProvider(QString("pdfpager"),&pdfPager);
+    dengine->addImageProvider(QString("pdfpager"),pdfPager);
     qDebug () << "   image providers " << dengine->imageProvider (QString("pdfpager"));
-    qDebug () << "   pdf pager       " << &pdfPager;
+    qDebug () << "   pdf pager       " << pdfPager;
   }
   QDeclarativeContext * dcontext = rootContext();
   if (dcontext) {
-    dcontext->setContextProperty ("pdfPagerIF",&pdfPager);
-    dcontext->setContextProperty ("epubDocIF",&epubDoc);
+    dcontext->setContextProperty ("pdfPagerIF",pdfPager);
+    //dcontext->setContextProperty ("epubDocIF",&epubDoc);
   }
 }
 
@@ -89,7 +129,11 @@ void
 Burid::startPdf ()
 {
   qDebug () << __PRETTY_FUNCTION__;
-  pdfPager.LoadPDF ("data/pdf/control_arxiv.pdf");
+  pdfPager->LoadPDF ("data/pdf/control_arxiv.pdf");
+  QStringList keys = pdfPager->infoKeys ();
+  for (int i=0; i< keys.count(); i++) {
+    qDebug () << "    doc " << keys.at(i) << pdfPager->info (keys.at(i));
+  }
 }
 
 void
@@ -100,9 +144,12 @@ Burid::startEpub ()
 void
 Burid::Quit ()
 {
+  Settings().setValue ("+size",size());
+  Settings().sync();
   if (app) {
     app->quit ();
   }
+  qDebug () << __PRETTY_FUNCTION__ << " All Done ";
 }
 
 

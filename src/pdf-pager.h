@@ -28,6 +28,7 @@
 #include <QImage>
 #include <QObject>
 #include <poppler/qt4/poppler-qt4.h>
+#include <QStringList>
 
 namespace burid
 {
@@ -37,6 +38,7 @@ class PdfPager: public QObject, public QDeclarativeImageProvider
 Q_OBJECT
 public:
   PdfPager (QObject *parent=0);
+  ~PdfPager ();
 
   virtual QImage requestImage (const QString & id, 
                               QSize * size, 
@@ -47,6 +49,9 @@ public:
 
   void LoadPDF (const QString & filename);
   void LoadPDFfromData (const QByteArray & pdfData);
+
+  QStringList infoKeys ();
+  QString     info (const QString & key);
 
 private:
 
