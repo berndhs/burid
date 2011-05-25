@@ -25,6 +25,7 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 
 namespace burid
 {
@@ -73,6 +74,10 @@ Burid::Run ()
     dengine->addImageProvider(QString("pdfpager"),&pdfPager);
     qDebug () << "   image providers " << dengine->imageProvider (QString("pdfpager"));
     qDebug () << "   pdf pager       " << &pdfPager;
+  }
+  QDeclarativeContext * dcontext = rootContext();
+  if (dcontext) {
+    dcontext->setContextProperty ("pdfPagerIF",&pdfPager);
   }
 }
 

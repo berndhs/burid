@@ -36,14 +36,16 @@ Rectangle {
   function loadImage (theName) {
     console.log ("load Image " + providerName + "  / " + theName)
     pageImage.source = "image://" + providerName + "/" + theName
+    console.log ("    load progress " + pageImage.progress)
   }
 
   Rectangle {
     id: pageControlRect
-    color: "transparent"
+    color: "lightblue"
+    opacity: 0.7
     height: 32
     width: parent.width
-    z: parent.z+1
+    z: parent.z+2
     anchors {
       horizontalCenter: parent.horizontalCenter
       bottom: parent.bottom
@@ -56,22 +58,27 @@ Rectangle {
         height: pageControlRect.height
         opacity: 0.7
         labelText: qsTr ("back")
-        onClicked: { bookPdfViewRect.loadImage ("back") }
+        onClicked: { bookPdfViewRect.loadImage (pdfPagerIF.nextImage("back",1)) }
       }
       ChoiceButton {
         id: forwardButton
         height: pageControlRect.height
         opacity: 0.7
         labelText: qsTr ("forward")
-        onClicked: { bookPdfViewRect.loadImage ("forward") }
+        onClicked: { bookPdfViewRect.loadImage (pdfPagerIF.nextImage("forward",1)) }
       }
     }
   }
 
   Flickable {
     id: pageFlick
+    height: parent.height
+    width: parent.width
+    interactive: true
+    
     Image {
       id: pageImage
+      z: parent.z + 1
       objectName: "PdfPageImage"
       height: parent.height
       width: parent.width
