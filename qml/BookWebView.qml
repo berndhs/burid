@@ -4,9 +4,11 @@ import QtWebKit 1.0
 
 Rectangle {
   id: bookViewBox
-  property alias bookUrl: bookView.url
   clip: true
 
+  function loadBook (theUrl) {
+    bookView.loadPage (theUrl)
+  }
 
   Rectangle {
     id: pageControlRect
@@ -45,12 +47,24 @@ Rectangle {
     contentWidth: bookView.width
     contentHeight: bookView.height
     function pageDown () {
-      bookViewFlick.contentY += bookViewFlick.height * 0.9 
-      console.log (" down is " + epubDocIF.nextPage ("down",1))
+      if (bookViewFlick.atYEnd) {
+        var nextUrl = epubControlIF.nextItem (1)
+        if (nextUrl != "") {
+          bookView.loadPage (nextUrl)
+        }
+      } else {
+        bookViewFlick.contentY += bookViewFlick.height * 0.9 
+      }
     }
     function pageUp () {
-      bookViewFlick.contentY -= bookViewFlick.height * 0.9 
-      console.log (" down is " + epubDocIF.nextPage ("up",1))
+      if (bookViewFlick.atYBeginning) {
+        var nextUrl = epubControlIF.nextItem (-1)
+        if (nextUrl != "") {
+          bookView.loadPage (nextUrl)
+        }
+      } else {
+        bookViewFlick.contentY -= bookViewFlick.height * 0.9 
+      }
     }
 
     WebView {
@@ -64,6 +78,13 @@ Rectangle {
       property real origScale: 1
       property real scrollXStep: -5
       property real scrollYStep: -5
+
+      function loadPage (theUrl) {
+        url = theUrl
+        bookViewFlick.contentX = 0
+        bookViewFlick.contentY = 0
+      }    
+
       Keys.onLeftPressed: bookViewFlick.contentX += scrollXStep 
       Keys.onRightPressed: bookViewFlick.contentX -= scrollXStep 
       Keys.onUpPressed: bookViewFlick.contentY +=  scrollYStep

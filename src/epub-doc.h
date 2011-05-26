@@ -26,6 +26,10 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
+#include <QDomNodeList>
+#include <QList>
+#include <QMap>
 
 namespace burid
 {
@@ -37,17 +41,40 @@ Q_OBJECT
 public:
 
   EpubDoc (QObject *parent=0);
-  Q_INVOKABLE QString nextPage (const QString & direction, int offset);
-  Q_INVOKABLE QString startPage ();
+  Q_INVOKABLE QString nextItem (int offset);
+  Q_INVOKABLE QString startItem ();
 
   void openBook (const QString & filename);
   void clearCache ();
 
+signals:
+
+  void startBook (const QString & startUrl);
+
 private:
 
-  void unzip (const QString & compressedName, QString & clearName);
+  class ManifestRec {
+    public:
+      ManifestRec ();
+      ManifestRec (const QString & theId, 
+                   const QString & theHref, 
+                   const QString & theMedia);
+      ManifestRec (const ManifestRec & other);
+      QString    id;
+      QString    href;
+      QString    mediaType;
+  };
 
-  static QString UnzipProgram;
+  void unzip (const QString & compressedName, QString & clearName);
+  void ReadManifests (const QDomNodeList & manifests);
+  void ReadSpines (const QDomNodeList & spines);
+
+  QString                        currentDir;
+  int                            currentSpineItem;
+  QMap <QString, ManifestRec>    manifest;    // map of book part ids to files
+  QList <QString>                spine;       // linear order of book parts
+
+  QStringList    tempDirs;
 
 }; 
 

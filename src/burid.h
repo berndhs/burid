@@ -56,6 +56,8 @@ private slots:
   void startPdf ();
   void startEpub ();
 
+  void startReadEpub (const QString & startUrl);
+
   void periodicSave ();
 
 protected:

@@ -38,7 +38,7 @@ Burid::Burid (QWidget *parent)
   :QDeclarativeView (parent),
    app (0),
    qmlRoot (0),
-   //epubDoc (this),
+   epubDoc (this),
    pdfPager (0),
    saveTimer (this)
 {
@@ -51,6 +51,9 @@ Burid::Burid (QWidget *parent)
   connect (&saveTimer, SIGNAL (timeout()), this, SLOT (periodicSave()));
   saveTimer.start (60*1000); // minute
   QTimer::singleShot (3*1000, this, SLOT (periodicSave()));
+
+  connect (&epubDoc, SIGNAL (startBook(const QString &)),
+           this, SLOT (startReadEpub (const QString &)));
 }
 
 Burid::~Burid ()
@@ -147,6 +150,16 @@ Burid::startEpub ()
                      tr("EPub books (*.epub);; All Files (*)"));
   if (!filename.isEmpty()) { 
     epubDoc.openBook (filename);
+  }
+}
+
+void
+Burid::startReadEpub (const QString & startUrl)
+{
+  qDebug () << __PRETTY_FUNCTION__ << startUrl << qmlRoot;
+  if (qmlRoot) {
+    QMetaObject::invokeMethod (qmlRoot, "loadEpub",
+      Q_ARG (QVariant, startUrl));
   }
 }
 

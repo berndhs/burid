@@ -37,8 +37,9 @@ Rectangle {
   signal startReadEpub ()
   signal startReadPdf ()
 
-  function loadHtml (theUrl) {
-    bookWebContentView.bookUrl = theUrl
+  function loadEpub (theUrl) {
+    showReadBox ("html")
+    bookWebContentView.loadBook (theUrl)
   }
   function loadPdf (thePage) {
     bookPdfContentView.loadImage (thePage)
@@ -69,9 +70,7 @@ Rectangle {
     bookPdfButton.visible = false
     titleBox.showTitle = false
     mainRect.topReserve = 0
-    if (theFormat == "html") {
-      loadHtml (epubControlIF.startPage())
-    } else if (theFormat == "pdf") {
+    if (theFormat == "pdf") {
       loadPdf (pdfPagerIF.startImage())
     }
   }
