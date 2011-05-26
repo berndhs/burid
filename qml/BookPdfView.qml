@@ -29,6 +29,8 @@ Rectangle {
   width: 600
   height: 600
   property string providerName: ""
+  property real scrollXStep: -5
+  property real scrollYStep: -5
   clip: true
 
   function loadImage (theName) {
@@ -38,10 +40,17 @@ Rectangle {
   }
   focus: true
   
+  Keys.onLeftPressed: pageFlick.contentX += scrollXStep 
+  Keys.onRightPressed: pageFlick.contentX -= scrollXStep 
+  Keys.onUpPressed: pageFlick.contentY +=  scrollYStep
+  Keys.onDownPressed: pageFlick.contentY -= scrollYStep
+  Keys.onSpacePressed: { pageFlick.contentX = 0; pageFlick.contentY = 0 }
+  
   Keys.onPressed: {
     console.log ("PDF key event " + event.key)
     pdfPagerIF.keyPressed (event.key, event.modifiers)
   }
+  
 
   Connections {
     target: pdfPagerIF
