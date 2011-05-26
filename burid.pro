@@ -68,6 +68,7 @@ FORMS = \
 
 HEADERS = \
           src/$${MYNAME}-main.h \
+          src/$${MYNAME}-magic.h \
           src/$${MYNAME}.h \
           src/pdf-pager.h \
           src/epub-doc.h \
@@ -79,6 +80,7 @@ HEADERS = \
 
 SOURCES = \
           src/$${MYNAME}-main.cpp \
+          src/$${MYNAME}-magic.cpp \
           src/$${MYNAME}.cpp \
           src/pdf-pager.cpp \
           src/epub-doc.cpp \

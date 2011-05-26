@@ -1,5 +1,4 @@
-#ifndef BURID_EPUB_DOC_H
-#define BURID_EPUB_DOC_H
+#include "burid-magic.h"
 
 
 /****************************************************************
@@ -24,33 +23,9 @@
  ****************************************************************/
 
 
-#include <QObject>
-#include <QString>
-
 namespace burid
 {
 
-class EpubDoc: public QObject 
-{
-Q_OBJECT
-
-public:
-
-  EpubDoc (QObject *parent=0);
-  Q_INVOKABLE QString nextPage (const QString & direction, int offset);
-  Q_INVOKABLE QString startPage ();
-
-  void openBook (const QString & filename);
-  void clearCache ();
-
-private:
-
-  void unzip (const QString & compressedName, QString & clearName);
-
-  static QString UnzipProgram;
-
-}; 
+QString Magic::UnzipProgram ("unzip");
 
 } // namespace
-
-#endif

@@ -1,5 +1,5 @@
-#ifndef BURID_EPUB_DOC_H
-#define BURID_EPUB_DOC_H
+#ifndef BURID_BURID_MAGIC_H
+#define BURID_BURID_MAGIC_H
 
 
 /****************************************************************
@@ -23,33 +23,18 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
-
-#include <QObject>
 #include <QString>
 
 namespace burid
 {
 
-class EpubDoc: public QObject 
-{
-Q_OBJECT
+class Magic {
 
 public:
 
-  EpubDoc (QObject *parent=0);
-  Q_INVOKABLE QString nextPage (const QString & direction, int offset);
-  Q_INVOKABLE QString startPage ();
-
-  void openBook (const QString & filename);
-  void clearCache ();
-
-private:
-
-  void unzip (const QString & compressedName, QString & clearName);
-
   static QString UnzipProgram;
 
-}; 
+} ;
 
 } // namespace
 

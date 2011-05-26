@@ -27,7 +27,11 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
+#include <QUuid>
 #include <QDebug>
+#include "burid-magic.h"
+
+QString burid::EpubDoc::UnzipProgram ("unzip");
 
 namespace burid
 {
@@ -72,14 +76,29 @@ EpubDoc::openBook (const QString & filename)
 void
 EpubDoc::unzip (const QString & compressedName, QString & clearName)
 {
-  QString tmpdir = QDesktopServices::storageLocation (QDesktopServices::TempLocation);
-  tmpdir.append (QDir::separator());
-  tmpdir.append ("burid-unzip");
-  QProcess::execute (QString ("unzip ")
+  QString tmpRoot = QDesktopServices::storageLocation 
+                      (QDesktopServices::TempLocation);
+  QString tmpName (tmpRoot + QDir::separator() 
+                    + QString("burid") + QDir::separator()
+                    + "unpack_");
+  tmpName.append (QUuid::createUuid().toString().remove(QRegExp("[{}-]")));
+  QDir tmpRootDir (tmpRoot);
+  tmpRootDir.mkpath (tmpName);
+  QProcess::execute (Magic::UnzipProgram
+                     + QString (" ")
                      + compressedName
                      + QString (" -d ")
-                     + tmpdir);
-  clearName = tmpdir + QDir::separator() + QString("content.opf"); 
+                     + tmpName);
+  QStringList filter;
+  QDir unpackDir (tmpName);
+  filter.append ("*.opf");
+  QStringList files = unpackDir.entryList (filter, 
+                   QDir::Files | QDir::NoSymLinks | QDir::Readable);
+  if (files.count() == 1) {
+    clearName = tmpName + QDir::separator() + files.at(0);
+  } else {
+    clearName.clear();
+  }
   qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << clearName;
 }
 
