@@ -40,6 +40,13 @@ public:
   Q_INVOKABLE QString nextPage (const QString & direction, int offset);
   Q_INVOKABLE QString startPage ();
 
+  void openBook (const QString & filename);
+  void clearCache ();
+
+private:
+
+  void unzip (const QString & compressedName, QString & clearName);
+
 }; 
 
 } // namespace

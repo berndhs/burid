@@ -46,7 +46,6 @@ Rectangle {
   function readBook () {
     startReadEpub ()
     console.log (" DefaultMain readBook")
-    showReadBox ("html")
   }
   function readPdf () {
     startReadPdf ()
@@ -71,7 +70,7 @@ Rectangle {
     titleBox.showTitle = false
     mainRect.topReserve = 0
     if (theFormat == "html") {
-      loadHtml ("file:///home/bernd/mywork/burid/data/20/164/www.gutenberg.org@files@164@164-h@164-h-1.htm")
+      loadHtml (epubControlIF.startPage())
     } else if (theFormat == "pdf") {
       loadPdf (pdfPagerIF.startImage())
     }

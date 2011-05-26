@@ -68,7 +68,7 @@ private:
   QStringList       configMessages;
   QGraphicsObject  *qmlRoot;
 
-  //EpubDoc              epubDoc;
+  EpubDoc              epubDoc;
   PdfPager             *pdfPager;
 
   QTimer               saveTimer;

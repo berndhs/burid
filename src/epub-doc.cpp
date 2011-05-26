@@ -22,6 +22,11 @@
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
+#include <QFile>
+#include <QDomDocument>
+#include <QDesktopServices>
+#include <QDir>
+#include <QProcess>
 #include <QDebug>
 
 namespace burid
@@ -43,6 +48,44 @@ EpubDoc::startPage ()
 {
   qDebug () << __PRETTY_FUNCTION__;
   return QString ("start_");
+}
+
+void
+EpubDoc::openBook (const QString & filename)
+{
+  QString tmpname;
+  unzip (filename, tmpname);
+  if (tmpname.isEmpty()) {
+    return;
+  }
+  QFile  infile (tmpname);
+  bool ok = infile.open (QFile::ReadOnly);
+  if (ok) {
+    QDomDocument  doc;
+    qDebug () << __PRETTY_FUNCTION__ << " before setContent";
+    doc.setContent (&infile);
+    qDebug () << __PRETTY_FUNCTION__ << doc.toString(1);
+  }
+  qDebug () << __PRETTY_FUNCTION__ << " file " << tmpname << ok;
+}
+
+void
+EpubDoc::unzip (const QString & compressedName, QString & clearName)
+{
+  QString tmpdir = QDesktopServices::storageLocation (QDesktopServices::TempLocation);
+  tmpdir.append (QDir::separator());
+  tmpdir.append ("burid-unzip");
+  QProcess::execute (QString ("unzip ")
+                     + compressedName
+                     + QString (" -d ")
+                     + tmpdir);
+  clearName = tmpdir + QDir::separator() + QString("content.opf"); 
+  qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << clearName;
+}
+
+void
+EpubDoc::clearCache ()
+{
 }
 
 } // namespace

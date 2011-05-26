@@ -26,6 +26,7 @@
 #include <QDesktopServices>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include <QFileDialog>
 #include "deliberate.h"
 
 using namespace deliberate;
@@ -104,6 +105,7 @@ Burid::Run ()
              "by <i>Bernd Stramm</i>"));
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
     connect (qmlRoot, SIGNAL (startReadPdf()), this, SLOT (startPdf()));
+    connect (qmlRoot, SIGNAL (startReadEpub()), this, SLOT (startEpub()));
   }
   show ();
   qDebug () << __PRETTY_FUNCTION__ << " docs location "
@@ -121,7 +123,7 @@ Burid::Run ()
   QDeclarativeContext * dcontext = rootContext();
   if (dcontext) {
     dcontext->setContextProperty ("pdfPagerIF",pdfPager);
-    //dcontext->setContextProperty ("epubDocIF",&epubDoc);
+    dcontext->setContextProperty ("epubControlIF",&epubDoc);
   }
 }
 
@@ -139,6 +141,13 @@ Burid::startPdf ()
 void
 Burid::startEpub ()
 {
+  QString filename = QFileDialog::getOpenFileName (this, 
+                     QString ("Select Epub File to open"),
+                     ".",
+                     tr("EPub books (*.epub);; All Files (*)"));
+  if (!filename.isEmpty()) { 
+    epubDoc.openBook (filename);
+  }
 }
 
 void
@@ -146,6 +155,7 @@ Burid::Quit ()
 {
   Settings().setValue ("+size",size());
   Settings().sync();
+  epubDoc.clearCache ();
   if (app) {
     app->quit ();
   }
