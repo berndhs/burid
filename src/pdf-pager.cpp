@@ -1,6 +1,6 @@
 #include "pdf-pager.h"
 
-
+#include <Qt>
 
 /****************************************************************
  * This file is distributed under the following license:
@@ -28,15 +28,19 @@
 #include <QLabel>
 #include <QPixmap>
 
-int burid::PdfPager::pagecount(1000);
+int burid::PdfPager::msgcount(1000);
 
 namespace burid
 {
 PdfPager::PdfPager (QObject *parent)
   :QObject(parent),
    QDeclarativeImageProvider (QDeclarativeImageProvider::Image),
-   poppDoc (0)
+   poppDoc (0),
+   xresDefault (72.0),
+   yresDefault (72.0)
 {
+  xres = xresDefault;
+  yres = yresDefault;
 }
 
 PdfPager::~PdfPager ()
@@ -77,6 +81,29 @@ PdfPager::info (const QString & key)
   return QString();
 }
 
+void
+PdfPager::keyPressed (int key, int modifier)
+{
+  qDebug () << __PRETTY_FUNCTION__ << " key " <<  key << " mod " << modifier;
+  QString updateArg (QString("update_") + QString::number(++msgcount)) ;
+  switch (key) {
+  case Qt::Key_Plus:
+    qDebug () << "    Plus pressed";
+    xres *= 1.1; yres *= 1.1;
+    emit updateImage (updateArg);
+    break;
+  case Qt::Key_Minus:
+    xres /= 1.1; yres /= 1.1;
+    emit updateImage (updateArg);
+    break;
+  case Qt::Key_0:
+    xres = xresDefault; yres = yresDefault;
+    emit updateImage (updateArg);
+  default:
+    break;
+  }
+}
+
 void 
 PdfPager::LoadPDFfromData (const QByteArray & pdfData)
 {
@@ -96,7 +123,7 @@ PdfPager::PageImage (Poppler::Document * pdoc, int pnum)
   if (pdoc && (0 <= pnum) && (pnum < pdoc->numPages())) {
     Poppler::Page * page = pdoc->page (pnum);
     if (page) {
-      return page->renderToImage ();
+      return page->renderToImage (xres,yres);
     }
   }
   return QImage();
@@ -125,6 +152,8 @@ PdfPager::requestImage (const QString & id,
       pagenum++;
     }
     returnImage = PageImage (poppDoc, pagenum);
+  } else if (id.startsWith (QString("update_"))) {
+    returnImage = PageImage (poppDoc, pagenum);
   }
   qDebug () << "              incoming size " << *size;
   if (size) {
@@ -137,13 +166,13 @@ PdfPager::requestImage (const QString & id,
 QString
 PdfPager::nextImage (const QString & direction, int offset)
 {
-  return direction + "_" + QString::number(pagecount++);
+  return direction + "_" + QString::number(++msgcount);
 }
 
 QString
 PdfPager::startImage ()
 {
-  return QString("start_") + QString::number(pagecount++);
+  return QString("start_") + QString::number(++msgcount);
 }
 
 } // namespace

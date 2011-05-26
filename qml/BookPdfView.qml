@@ -36,6 +36,20 @@ Rectangle {
     pageFlick.loadImage ("image://" + providerName + "/" + theName)
     console.log ("    load progress " + pageImage.progress)
   }
+  focus: true
+  
+  Keys.onPressed: {
+    console.log ("PDF key event " + event.key)
+    pdfPagerIF.keyPressed (event.key, event.modifiers)
+  }
+
+  Connections {
+    target: pdfPagerIF
+    onUpdateImage: {
+      console.log ("image update from IF " + updateName)
+      bookPdfViewRect.loadImage (updateName)
+    }
+  }
 
   Flickable {
     id: pageFlick
@@ -58,6 +72,7 @@ Rectangle {
       console.log ("      cW " + contentWidth + "  cH " + contentHeight)
       console.log ("      progress " + pageImage.progress)
     }
+
 
     Image {
       id: pageImage

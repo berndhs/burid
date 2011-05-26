@@ -29,6 +29,7 @@
 #include <QObject>
 #include <poppler/qt4/poppler-qt4.h>
 #include <QStringList>
+#include <QKeyEvent>
 
 namespace burid
 {
@@ -46,12 +47,17 @@ public:
 
   Q_INVOKABLE QString nextImage (const QString & direction, int offset);
   Q_INVOKABLE QString startImage ();
+  Q_INVOKABLE void keyPressed (int key, int modfier);
 
   void LoadPDF (const QString & filename);
   void LoadPDFfromData (const QByteArray & pdfData);
 
   QStringList infoKeys ();
   QString     info (const QString & key);
+
+signals:
+
+  void updateImage (QString updateName);
 
 private:
 
@@ -60,8 +66,12 @@ private:
   Poppler::Document    *poppDoc;
   int                   pagenum;
   int                   pagemax;
+  double                xres;
+  double                yres;
+  double                xresDefault;
+  double                yresDefault;
 
-  static int pagecount;
+  static int msgcount;
 
 } ;
 
