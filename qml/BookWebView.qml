@@ -7,7 +7,7 @@ Rectangle {
   clip: true
 
   function loadBook (theUrl) {
-    bookView.loadPage (theUrl)
+    bookView.loadPage (theUrl,"top")
   }
 
   Rectangle {
@@ -50,7 +50,7 @@ Rectangle {
       if (bookViewFlick.atYEnd) {
         var nextUrl = epubControlIF.nextItem (1)
         if (nextUrl != "") {
-          bookView.loadPage (nextUrl)
+          bookView.loadPage (nextUrl,"top")
         }
       } else {
         bookViewFlick.contentY += bookViewFlick.height * 0.9 
@@ -60,7 +60,7 @@ Rectangle {
       if (bookViewFlick.atYBeginning) {
         var nextUrl = epubControlIF.nextItem (-1)
         if (nextUrl != "") {
-          bookView.loadPage (nextUrl)
+          bookView.loadPage (nextUrl, "bottom")
         }
       } else {
         bookViewFlick.contentY -= bookViewFlick.height * 0.9 
@@ -79,10 +79,11 @@ Rectangle {
       property real scrollXStep: -5
       property real scrollYStep: -5
 
-      function loadPage (theUrl) {
+      property string displayEnd: "top"
+
+      function loadPage (theUrl, theEnd) {
+        displayEnd = theEnd
         url = theUrl
-        bookViewFlick.contentX = 0
-        bookViewFlick.contentY = 0
       }    
 
       Keys.onLeftPressed: bookViewFlick.contentX += scrollXStep 
@@ -112,9 +113,15 @@ Rectangle {
         bookViewFlick.contentY = 0
       }
       onLoadFinished: {
-        console.log ("load url finished ")
+        console.log ("load url finished " + displayEnd)
         isLoadFinished = true
         bookViewBox.color = "blue"
+        bookViewFlick.contentX = 0
+        if (displayEnd == "top") {
+          bookViewFlick.contentY = 0
+        } else if (displayEnd == "bottom") {
+          bookViewFlick.contentY = bookViewFlick.contentHeight - bookViewFlick.height
+        }
       }
     }
   }
