@@ -11,3 +11,7 @@
 
 - epub multiple rootfiles in single package
 
+- wait for unzip to actually finish, don't bet on it
+
+- accept file name on command line, for xdg-open
+
