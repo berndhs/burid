@@ -56,6 +56,12 @@ CONFIG(debug, debug|release) {
   message ("RELEASE c-flags used $${QMAKE_CFLAGS_RELEASE}")
 }
 
+unix {
+  DEFINES += BURID_UNZIP_UNIX=1
+} else {
+  DEFINES += BURID_UNZIP_UNIX=0
+}
+
 
 
 UI_DIR = tmp/ui

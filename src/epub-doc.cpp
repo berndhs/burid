@@ -23,12 +23,14 @@
  ****************************************************************/
 
 #include <QFile>
+#include <QFileInfo>
 #include <QDomDocument>
 #include <QDesktopServices>
 #include <QDir>
 #include <QProcess>
 #include <QUuid>
 #include <QUrl>
+#include <QMessageBox>
 #include <QDebug>
 #include "burid-magic.h"
 
@@ -44,15 +46,17 @@ EpubDoc::nextItem (int offset)
 {
   qDebug () << __PRETTY_FUNCTION__ << offset;
   currentSpineItem += offset;
+  QString retval;
   if (0 <= currentSpineItem  && currentSpineItem < spine.count()) {
     QUrl nextUrl ( currentDir + QDir::separator() 
                       + manifest [spine.at(currentSpineItem)].href);
     if (nextUrl.scheme() == "") {
       nextUrl.setScheme ("file");
     }
-    return nextUrl.toString();
+    retval = nextUrl.toString();
   } 
-  return QString();
+  QMessageBox::information (0,QString("Next Page Url"),retval);
+  return retval;
 }
 
 QString
@@ -60,16 +64,19 @@ EpubDoc::startItem ()
 {
   qDebug () << __PRETTY_FUNCTION__;
   currentSpineItem = 0;
+  QString retval;
   if (spine.count() > 0) {
     QUrl startUrl ( currentDir + QDir::separator() 
                       + manifest [spine.at(0)].href);
     if (startUrl.scheme() == "") {
       startUrl.setScheme ("file");
     }
-    return startUrl.toString();
+    retval = startUrl.toString();
   } else {
-    return QString();
+    retval = QString();
   }
+  QMessageBox::information (0,QString("Start Page Url"),retval);
+  return retval;
 }
 
 void
@@ -77,12 +84,12 @@ EpubDoc::openBook (const QString & filename)
 {
   manifest.clear ();
   spine.clear ();
-  QString tmpname;
-  unzip (filename, tmpname);
-  if (tmpname.isEmpty()) {
+  QString contentName;
+  unzip (filename, contentName);
+  if (contentName.isEmpty()) {
     return;
   }
-  QFile  infile (tmpname);
+  QFile  infile (contentName);
   bool ok = infile.open (QFile::ReadOnly);
   if (ok) {
     QDomDocument  doc;
@@ -92,7 +99,7 @@ EpubDoc::openBook (const QString & filename)
     ReadManifests (doc.elementsByTagName ("manifest"));
     ReadSpines (doc.elementsByTagName ("spine"));
   }
-  qDebug () << __PRETTY_FUNCTION__ << " file " << tmpname << ok;
+  qDebug () << __PRETTY_FUNCTION__ << " file " << contentName << ok;
   qDebug () << "   Spine: " << spine;
   QString startUrl = startItem();
   qDebug () << "    want them to read " << startUrl;
@@ -134,8 +141,9 @@ EpubDoc::ReadSpines (const QDomNodeList & spines)
 }
 
 void
-EpubDoc::unzip (const QString & compressedName, QString & clearName)
+EpubDoc::unzip (const QString & compressedName, QString & contentName)
 {
+  contentName.clear();
   QString tmpRoot = QDesktopServices::storageLocation 
                       (QDesktopServices::TempLocation);
   QString tmpName (tmpRoot + QDir::separator() 
@@ -145,23 +153,39 @@ EpubDoc::unzip (const QString & compressedName, QString & clearName)
   QDir tmpRootDir (tmpRoot);
   tmpRootDir.mkpath (tmpName);
   tempDirs.append (tmpName);
-  currentDir = tmpName;
-  QProcess::execute (Magic::UnzipProgram
-                     + QString (" ")
-                     + compressedName
-                     + QString (" -d ")
-                     + tmpName);
-  QStringList filter;
+  #if BURID_UNZIP_UNIX
+  QStringList args;
+  args.append (compressedName);
+  args.append ("-d");
+  args.append (tmpName);
+  QProcess::execute (Magic::UnzipProgram, args);
+  #else
+  QMessageBox::warning (0, QString("No Umcompress!"),
+                     tr("Don't know how to Unzip EPUB on this system"));
+  #endif
   QDir unpackDir (tmpName);
-  filter.append ("*.opf");
-  QStringList files = unpackDir.entryList (filter, 
-                   QDir::Files | QDir::NoSymLinks | QDir::Readable);
-  if (files.count() == 1) {
-    clearName = tmpName + QDir::separator() + files.at(0);
-  } else {
-    clearName.clear();
+  QFile metaFile (tmpName + QDir::separator() + QString("META-INF")
+                  +QDir::separator() + QString("container.xml"));
+  bool ok = metaFile.open (QFile::ReadOnly);
+  if (!ok) {
+    QMessageBox::warning (0, QString ("No Metafile!"),
+                      metaFile.fileName());
+    return;
   }
-  qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << clearName;
+  QDomDocument metaDoc;
+  metaDoc.setContent (&metaFile);
+  QDomNodeList  rootfiles = metaDoc.elementsByTagName ("rootfile");
+  if (rootfiles.count() >= 1) {
+     QString fullPath = rootfiles.at(0).toElement().attribute("full-path");
+     if (fullPath.length() > 0) {
+       contentName = tmpName + QDir::separator()
+                   + fullPath;
+       currentDir = QFileInfo (contentName).absolutePath();
+     }
+  }
+  QMessageBox::information (0, QString("content name"),
+                  contentName);
+  qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << contentName;
 }
 
 void
