@@ -82,16 +82,23 @@ EpubDoc::startItem ()
 }
 
 void
-EpubDoc::mark (double pageY, double pageScale)
+EpubDoc::mark (const QString & markText, double pageY, double pageScale)
 {
-  qDebug () << __PRETTY_FUNCTION__ << origBookFile 
+  qDebug () << __PRETTY_FUNCTION__ << origBookFile << markText
             << currentSpineItem << pageY << pageScale;
   Bookmark mark (origBookFile, 
-                 QString ("Bookmark"),
+                 markText,
                  spine.at(currentSpineItem),
                  pageY,
                  pageScale);
   dbm.Write (mark);
+}
+
+QString
+EpubDoc::nextBookmark ()
+{
+  static int counter (1);
+  return tr ("Bookmark %1").arg(counter++);
 }
 
 void

@@ -44,7 +44,10 @@ public:
   EpubDoc (QObject *parent, DBManager & dbmanager);
   Q_INVOKABLE QString nextItem (int offset);
   Q_INVOKABLE QString startItem ();
-  Q_INVOKABLE void    mark (qreal pageY, qreal pageScale);
+  Q_INVOKABLE void    mark (const QString & markText, 
+                            qreal pageY, 
+                            qreal pageScale);
+  Q_INVOKABLE QString nextBookmark();
 
   void openBook (const QString & filename);
   void clearCache ();
