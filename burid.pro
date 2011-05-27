@@ -78,6 +78,8 @@ HEADERS = \
           src/$${MYNAME}.h \
           src/pdf-pager.h \
           src/epub-doc.h \
+          src/db-manager.h \
+          src/bookmark.h \
           src/gpl2.h \
           src/cmdoptions.h \
           src/deliberate.h \
@@ -90,6 +92,8 @@ SOURCES = \
           src/$${MYNAME}.cpp \
           src/pdf-pager.cpp \
           src/epub-doc.cpp \
+          src/db-manager.cpp \
+          src/bookmark.cpp \
           src/cmdoptions.cpp \
           src/deliberate.cpp \
           src/version.cpp \

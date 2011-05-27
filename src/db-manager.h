@@ -1,11 +1,10 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
-
+#ifndef DB_MANAGER_H
+#define DB_MANAGER_H
 
 /****************************************************************
  * This file is distributed under the following license:
  *
- * Copyright (C) 2011, Bernd Stramm
+ * Copyright (C) 2010, Bernd Stramm
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -22,60 +21,45 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, 
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
-
-
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include <QTimer>
-#include <QResizeEvent>
-#include "epub-doc.h"
-#include "pdf-pager.h"
-#include "db-manager.h"
+#include <QSqlDatabase>
+#include "bookmark.h"
+#include <QMap>
+#include <QObject>
 
 namespace burid
 {
-class Burid: public QDeclarativeView
+class DBManager : public QObject
 {
 Q_OBJECT
+
 public:
 
-  Burid (QWidget *parent=0);
-  ~Burid ();
+  DBManager (QObject *parent = 0);
+  ~DBManager ();
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
+  void  Start ();
+  void  Stop ();
+  bool  Running () { return dbRunning; }
 
-public slots:
-
-  void Quit ();
-
-private slots:
-
-  void startPdf ();
-  void startEpub ();
-
-  void startReadEpub (const QString & startUrl);
-
-  void periodicSave ();
-
-protected:
-
-  void resizeEvent (QResizeEvent * event);
+  bool  Write (const Bookmark &  bookmark);
+  bool  ReadAll (const QString & bookfile,
+                       BookmarkList & list);
 
 private:
 
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
+  void StartDB (QSqlDatabase & db,
+                    const QString & conName, 
+                    const QString & dbFilename);
+  void CheckFileExists (const QString & filename);
+  void CheckDBComplete (QSqlDatabase & db,
+                        const QStringList & elements);
+  QString ElementType (QSqlDatabase & db, const QString & name);
+  void    MakeElement (QSqlDatabase & db, const QString & element);
 
-  DBManager             dbm;
-  EpubDoc               epubDoc;
-  PdfPager             *pdfPager;
-  
-  QTimer               saveTimer;
+
+  QSqlDatabase     bookDB;
+  bool             dbRunning;
+
 };
 
 } // namespace

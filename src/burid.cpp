@@ -38,7 +38,8 @@ Burid::Burid (QWidget *parent)
   :QDeclarativeView (parent),
    app (0),
    qmlRoot (0),
-   epubDoc (this),
+   dbm (this),
+   epubDoc (this, dbm),
    pdfPager (0),
    saveTimer (this)
 {
@@ -59,6 +60,7 @@ Burid::Burid (QWidget *parent)
 Burid::~Burid ()
 {
   qDebug () << __PRETTY_FUNCTION__ << " That's all folks";
+  dbm.Stop ();
   if (qmlRoot) {
     disconnect (qmlRoot, 0,0,0);
   }
@@ -95,6 +97,13 @@ Burid::AddConfigMessages (const QStringList & messages)
 void
 Burid::Run ()
 {
+  dbm.Start ();
+  
+  QDeclarativeContext * dcontext = rootContext();
+  if (dcontext) {
+    dcontext->setContextProperty ("pdfPagerIF",pdfPager);
+    dcontext->setContextProperty ("epubControlIF",&epubDoc);
+  }
   setSource (QUrl("qrc:/DefaultMain.qml"));
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
   QSize curSize = Settings ().value ("+size", size()).toSize();
@@ -122,11 +131,6 @@ Burid::Run ()
     dengine->addImageProvider(QString("pdfpager"),pdfPager);
     qDebug () << "   image providers " << dengine->imageProvider (QString("pdfpager"));
     qDebug () << "   pdf pager       " << pdfPager;
-  }
-  QDeclarativeContext * dcontext = rootContext();
-  if (dcontext) {
-    dcontext->setContextProperty ("pdfPagerIF",pdfPager);
-    dcontext->setContextProperty ("epubControlIF",&epubDoc);
   }
 }
 

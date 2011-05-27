@@ -33,11 +33,13 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "burid-magic.h"
+#include "bookmark.h"
 
 namespace burid
 {
-EpubDoc::EpubDoc (QObject *parent)
-  :QObject (parent)
+EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
+  :QObject (parent),
+   dbm (dbmanager)
 {
 }
 
@@ -84,6 +86,12 @@ EpubDoc::mark (double pageY, double pageScale)
 {
   qDebug () << __PRETTY_FUNCTION__ << origBookFile 
             << currentSpineItem << pageY << pageScale;
+  Bookmark mark (origBookFile, 
+                 QString ("Bookmark"),
+                 spine.at(currentSpineItem),
+                 pageY,
+                 pageScale);
+  dbm.Write (mark);
 }
 
 void

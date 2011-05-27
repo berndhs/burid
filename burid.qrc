@@ -22,4 +22,7 @@
   <file alias="BookPdfView.qml">qml/BookPdfView.qml</file>
   <file alias="empty.png">qml/data/pdf/empty.png</file>
 </qresource>
+<qresource prefix="schemas">
+  <file alias="bookmarks.sql">sql/bookmarks.sql</file>
+</qresource>
 </RCC>

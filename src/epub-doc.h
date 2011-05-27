@@ -30,6 +30,7 @@
 #include <QDomNodeList>
 #include <QList>
 #include <QMap>
+#include "db-manager.h"
 
 namespace burid
 {
@@ -40,7 +41,7 @@ Q_OBJECT
 
 public:
 
-  EpubDoc (QObject *parent=0);
+  EpubDoc (QObject *parent, DBManager & dbmanager);
   Q_INVOKABLE QString nextItem (int offset);
   Q_INVOKABLE QString startItem ();
   Q_INVOKABLE void    mark (qreal pageY, qreal pageScale);
@@ -73,6 +74,7 @@ private:
   void CollectTexts (const QDomNodeList & nodeList,
                        QStringList & values);
 
+  DBManager                    & dbm;
   QString                        currentDir;
   int                            currentSpineItem;
   QStringList                    currentAuthors;

@@ -1,5 +1,4 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
+#include "bookmark.h"
 
 
 /****************************************************************
@@ -24,60 +23,46 @@
  ****************************************************************/
 
 
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include <QTimer>
-#include <QResizeEvent>
-#include "epub-doc.h"
-#include "pdf-pager.h"
-#include "db-manager.h"
-
 namespace burid
 {
-class Burid: public QDeclarativeView
+
+Bookmark::Bookmark ()
+  :mOffset (0.0)
 {
-Q_OBJECT
-public:
+}
 
-  Burid (QWidget *parent=0);
-  ~Burid ();
+Bookmark::Bookmark (const QString & bookfile,
+            const QString & markname,
+            const QString & spineitem,
+                  double  offset,
+                  double  scale)
+  :mBookFile (bookfile),
+   mMarkName (markname),
+   mSpineItem (spineitem),
+   mOffset (offset),
+   mScale (scale)
+{
+}
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
+Bookmark::Bookmark (const Bookmark & other)
+  :mBookFile (other.mBookFile),
+   mMarkName (other.mMarkName),
+   mSpineItem (other.mSpineItem),
+   mOffset (other.mOffset),
+   mScale (other.mScale)
+{
+}
 
-public slots:
+QString
+Bookmark::stringOffset (char format, int precision) const
+{
+  return QString::number (mOffset, format, precision);
+}
 
-  void Quit ();
-
-private slots:
-
-  void startPdf ();
-  void startEpub ();
-
-  void startReadEpub (const QString & startUrl);
-
-  void periodicSave ();
-
-protected:
-
-  void resizeEvent (QResizeEvent * event);
-
-private:
-
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
-
-  DBManager             dbm;
-  EpubDoc               epubDoc;
-  PdfPager             *pdfPager;
-  
-  QTimer               saveTimer;
-};
+QString
+Bookmark::stringScale (char format, int precision) const
+{
+ return QString::number (mScale, format, precision);
+}
 
 } // namespace
-
-#endif
