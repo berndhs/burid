@@ -7,5 +7,5 @@ Comment=Viewer for E-books in some of the major formats
 TryExec=ebook-viewer
 Exec=burid
 Icon=burid
-Categories=Graphics;Viewer;
+Categories=Graphics;Viewer;Office;
 MimeType=application/vnd.ctc-posml;text/html;application/ereader;application/oebps-package+xml;application/x-sony-bbeb;text/rtf;application/pdf;application/x-cbz;application/x-mobipocket-ebook;application/x-cbr;text/fb2+xml;application/vnd.oasis.opendocument.text;application/epub+zip;text/plain;application/xhtml+xml;
