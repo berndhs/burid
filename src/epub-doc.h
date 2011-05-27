@@ -75,7 +75,7 @@ private:
 
   QString                        currentDir;
   int                            currentSpineItem;
-  QString                        currentAuthor;
+  QStringList                    currentAuthors;
   QString                        currentTitle;
   QStringList                    currentSubjects;
   QString                        origBookFile;

@@ -117,23 +117,21 @@ EpubDoc::openBook (const QString & filename)
 void
 EpubDoc::ReadMeta (const QDomNodeList & metadata)
 {
-  QStringList authors;
-  QStringList subjects;
+  currentAuthors.clear ();
+  currentSubjects.clear ();
   QStringList titles;
   for (int i=0; i<metadata.count(); i++) {
     CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:creator"),
-                  authors);
+                  currentAuthors);
     CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:subject"),
-                  subjects);
+                  currentSubjects);
     CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:title"),
                   titles);
   }
-  qDebug () << __PRETTY_FUNCTION__ << " Authors " << authors;
-  qDebug () << __PRETTY_FUNCTION__ << " Subjects " << subjects;
+  qDebug () << __PRETTY_FUNCTION__ << " Authors " << currentAuthors;
+  qDebug () << __PRETTY_FUNCTION__ << " Subjects " << currentSubjects;
   qDebug () << __PRETTY_FUNCTION__ << " Titles " << titles;
-  currentAuthor = authors.join (tr(" & "));
   currentTitle = titles.join (tr("; "));
-  currentSubjects = subjects;
 }
 
 void
