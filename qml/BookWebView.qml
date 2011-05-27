@@ -24,17 +24,31 @@ Rectangle {
       spacing: 16
       anchors.centerIn: parent
       ChoiceButton {
-        id: backButton
+        id: backPageButton
         height: pageControlRect.height
         opacity: 0.7
-        labelText: qsTr ("back")
+        labelText: qsTr ("<- Page")
         onClicked: { bookViewFlick.pageUp () }
       }
       ChoiceButton {
-        id: forwardButton
-        height: pageControlRect.height
+        id: backWebButton
+        height: pageControlRect.height * 0.8
+        opacity: 0.7
+        labelText: qsTr ("back")
+        onClicked: { bookView.back.trigger() }
+      }
+      ChoiceButton {
+        id: forwardWebButton
+        height: pageControlRect.height * 0.8
         opacity: 0.7
         labelText: qsTr ("forward")
+        onClicked: { bookView.forward.trigger() }
+      }
+      ChoiceButton {
+        id: forwardPageButton
+        height: pageControlRect.height
+        opacity: 0.7
+        labelText: qsTr ("Page ->")
         onClicked: { bookViewFlick.pageDown () }
       }
     }
@@ -92,8 +106,8 @@ Rectangle {
       Keys.onDownPressed: bookViewFlick.contentY -= scrollYStep
       Keys.onSpacePressed: { bookViewFlick.contentX = 0; bookViewFlick.contentY = 0 }
       Keys.onPressed: {
-         if (event.key == Qt.Key_Plus) { bookView.contentsScale += 0.1 } 
-         else if (event.key == Qt.Key_Minus) {bookView.contentsScale -= 0.1 }
+         if (event.key == Qt.Key_Plus) { bookView.contentsScale *= 1.5 } 
+         else if (event.key == Qt.Key_Minus) {bookView.contentsScale /= 1.5 }
          else if (event.key == Qt.Key_0) {bookView.contentsScale = origScale }
          else if (event.key == Qt.Key_PageUp) {
            bookViewFlick.pageUp ()

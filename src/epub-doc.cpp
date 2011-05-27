@@ -55,7 +55,7 @@ EpubDoc::nextItem (int offset)
     }
     retval = nextUrl.toString();
   } 
-  QMessageBox::information (0,QString("Next Page Url"),retval);
+  //QMessageBox::information (0,QString("Next Page Url"),retval);
   return retval;
 }
 
@@ -75,7 +75,7 @@ EpubDoc::startItem ()
   } else {
     retval = QString();
   }
-  QMessageBox::information (0,QString("Start Page Url"),retval);
+  //QMessageBox::information (0,QString("Start Page Url"),retval);
   return retval;
 }
 
@@ -95,7 +95,6 @@ EpubDoc::openBook (const QString & filename)
     QDomDocument  doc;
     qDebug () << __PRETTY_FUNCTION__ << " before setContent";
     doc.setContent (&infile);
-    //qDebug () << __PRETTY_FUNCTION__ << doc.toString(1);
     ReadManifests (doc.elementsByTagName ("manifest"));
     ReadSpines (doc.elementsByTagName ("spine"));
   }
@@ -183,8 +182,7 @@ EpubDoc::unzip (const QString & compressedName, QString & contentName)
        currentDir = QFileInfo (contentName).absolutePath();
      }
   }
-  QMessageBox::information (0, QString("content name"),
-                  contentName);
+  //QMessageBox::information (0, QString("content name"), contentName);
   qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << contentName;
 }
 
