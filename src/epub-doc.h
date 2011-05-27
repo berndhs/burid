@@ -43,6 +43,7 @@ public:
   EpubDoc (QObject *parent=0);
   Q_INVOKABLE QString nextItem (int offset);
   Q_INVOKABLE QString startItem ();
+  Q_INVOKABLE void    mark (qreal pageY, qreal pageScale);
 
   void openBook (const QString & filename);
   void clearCache ();
@@ -66,11 +67,18 @@ private:
   };
 
   void unzip (const QString & compressedName, QString & clearName);
+  void ReadMeta (const QDomNodeList & manifests);
   void ReadManifests (const QDomNodeList & manifests);
   void ReadSpines (const QDomNodeList & spines);
+  void CollectTexts (const QDomNodeList & nodeList,
+                       QStringList & values);
 
   QString                        currentDir;
   int                            currentSpineItem;
+  QString                        currentAuthor;
+  QString                        currentTitle;
+  QStringList                    currentSubjects;
+  QString                        origBookFile;
   QMap <QString, ManifestRec>    manifest;    // map of book part ids to files
   QList <QString>                spine;       // linear order of book parts
 

@@ -5,6 +5,7 @@ import QtWebKit 1.0
 Rectangle {
   id: bookViewBox
   clip: true
+  property alias currentPageY: bookViewFlick.contentY
 
   function loadBook (theUrl) {
     bookView.loadPage (theUrl,"top")
@@ -36,6 +37,14 @@ Rectangle {
         opacity: 0.7
         labelText: qsTr ("back")
         onClicked: { bookView.back.trigger() }
+      }
+      ChoiceButton {
+        id: markButton
+        height: pageControlRect.height * 0.8
+        opacity: 0.7
+        labelText: qsTr ("<b>!</b>")
+        onClicked: { epubControlIF.mark(bookViewFlick.contentY,
+                                       bookView.contentsScale) }
       }
       ChoiceButton {
         id: forwardWebButton
@@ -129,7 +138,7 @@ Rectangle {
       onLoadFinished: {
         console.log ("load url finished " + displayEnd)
         isLoadFinished = true
-        bookViewBox.color = "blue"
+        bookViewBox.color = "#d0e0ff"
         bookViewFlick.contentX = 0
         if (displayEnd == "top") {
           bookViewFlick.contentY = 0

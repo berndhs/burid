@@ -32,6 +32,8 @@ Rectangle {
   property string mainMenuButtonColor: "#b4a470"
   property string mainMenuButtonFade: "#fbdff7"
 
+  property alias epubPageY: bookWebContentView.currentPageY
+
 
   signal quitApp ()
   signal startReadEpub ()

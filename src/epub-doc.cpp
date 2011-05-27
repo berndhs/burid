@@ -80,10 +80,18 @@ EpubDoc::startItem ()
 }
 
 void
+EpubDoc::mark (double pageY, double pageScale)
+{
+  qDebug () << __PRETTY_FUNCTION__ << origBookFile 
+            << currentSpineItem << pageY << pageScale;
+}
+
+void
 EpubDoc::openBook (const QString & filename)
 {
   manifest.clear ();
   spine.clear ();
+  origBookFile = filename;
   QString contentName;
   unzip (filename, contentName);
   if (contentName.isEmpty()) {
@@ -95,6 +103,7 @@ EpubDoc::openBook (const QString & filename)
     QDomDocument  doc;
     qDebug () << __PRETTY_FUNCTION__ << " before setContent";
     doc.setContent (&infile);
+    ReadMeta (doc.elementsByTagName ("metadata"));
     ReadManifests (doc.elementsByTagName ("manifest"));
     ReadSpines (doc.elementsByTagName ("spine"));
   }
@@ -104,6 +113,38 @@ EpubDoc::openBook (const QString & filename)
   qDebug () << "    want them to read " << startUrl;
   emit startBook (startUrl);
 }
+
+void
+EpubDoc::ReadMeta (const QDomNodeList & metadata)
+{
+  QStringList authors;
+  QStringList subjects;
+  QStringList titles;
+  for (int i=0; i<metadata.count(); i++) {
+    CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:creator"),
+                  authors);
+    CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:subject"),
+                  subjects);
+    CollectTexts (metadata.at(i).toElement().elementsByTagName ("dc:title"),
+                  titles);
+  }
+  qDebug () << __PRETTY_FUNCTION__ << " Authors " << authors;
+  qDebug () << __PRETTY_FUNCTION__ << " Subjects " << subjects;
+  qDebug () << __PRETTY_FUNCTION__ << " Titles " << titles;
+  currentAuthor = authors.join (tr(" & "));
+  currentTitle = titles.join (tr("; "));
+  currentSubjects = subjects;
+}
+
+void
+EpubDoc::CollectTexts (const QDomNodeList & nodeList,
+                       QStringList & values)
+{
+  for (int i=0; i<nodeList.count(); i++) {
+    values.append (nodeList.at(i).toElement().text());
+  }
+}
+                      
 
 void
 EpubDoc::ReadManifests (const QDomNodeList & manifests)
