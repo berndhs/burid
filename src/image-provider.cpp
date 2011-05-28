@@ -76,4 +76,14 @@ ImageProvider::requestImage (const QString & id,
   return returnImage;
 }
 
+QPixmap 
+ImageProvider::requestPixmap (const QString & id, 
+                              QSize * size, 
+                        const QSize & requestedSize)
+{
+  qDebug () << __PRETTY_FUNCTION__ << id << size << requestedSize;
+  return QPixmap::fromImage (requestImage (id,size,requestedSize));
+}
+
+
 } // namespace

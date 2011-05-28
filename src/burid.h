@@ -44,8 +44,9 @@ public:
   Burid (QWidget *parent=0);
   ~Burid ();
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
+  void Init (QApplication & qapp,
+             const QStringList & fileList = QStringList(),
+             const QStringList & confMessages = QStringList());
   void Run ();
 
 public slots:
@@ -54,13 +55,15 @@ public slots:
 
 private slots:
 
-  void startPdf ();
-  void startEpub ();
+  void startPdf (const QString & file = QString());
+  void startEpub (const QString & file = QString());
 
   void startReadEpub (const QString & startUrl);
   void jumpToEpub (const QString & url, qreal offset, qreal scale);
 
   void periodicSave ();
+
+  void doneReading ();
 
 protected:
 
@@ -69,6 +72,7 @@ protected:
 private:
 
   QApplication     *app;
+  QStringList       fileList;
   QStringList       configMessages;
   QGraphicsObject  *qmlRoot;
 

@@ -84,15 +84,13 @@ Burid::periodicSave ()
 }
 
 void
-Burid::Init (QApplication & qapp)
+Burid::Init (QApplication & qapp,
+            const QStringList & argList,
+            const QStringList & confMessages)
 {
   app = &qapp;
-}
-
-void
-Burid::AddConfigMessages (const QStringList & messages)
-{
-  configMessages.append (messages);
+  fileList = argList;
+  configMessages = confMessages;
 }
 
 void
@@ -123,6 +121,7 @@ Burid::Run ()
     connect (qmlRoot, SIGNAL (quitApp()), this, SLOT (Quit()));
     connect (qmlRoot, SIGNAL (startReadPdf()), this, SLOT (startPdf()));
     connect (qmlRoot, SIGNAL (startReadEpub()), this, SLOT (startEpub()));
+    connect (qmlRoot, SIGNAL (finishedBook()), this, SLOT (doneReading()));
   }
   show ();
   qDebug () << __PRETTY_FUNCTION__ << " docs location "
@@ -138,32 +137,58 @@ Burid::Run ()
     qDebug () << "   pdf pager       " << pdfPager;
     qDebug () << "   image pro       " << pdfPager->imageControl();
   }
-}
-
-void
-Burid::startPdf ()
-{
-  qDebug () << __PRETTY_FUNCTION__;
-  QString filename = QFileDialog::getOpenFileName (this, 
-                     QString ("Select PDF File to open"),
-                     ".",
-                     tr("PDF Files (*.pdf);; All Files (*)"));
-  if (!filename.isEmpty()) { 
-    pdfPager->LoadPDF (filename);
-    QStringList keys = pdfPager->infoKeys ();
-    for (int i=0; i< keys.count(); i++) {
-      qDebug () << "    doc " << keys.at(i) << pdfPager->info (keys.at(i));
+  qDebug () << " arguments =========> " << fileList;
+  int fileCount = fileList.count();
+  if (fileCount > 0) {
+    QString first = fileList.takeFirst ();
+    if (first.endsWith (QString (".pdf"))) {
+      startPdf (first);
+    } else if (first.endsWith (QString (".epub"))) {
+      startEpub (first);
     }
   }
 }
 
 void
-Burid::startEpub ()
+Burid::doneReading ()
 {
-  QString filename = QFileDialog::getOpenFileName (this, 
-                     QString ("Select Epub File to open"),
-                     ".",
-                     tr("EPub books (*.epub);; All Files (*)"));
+  qDebug () << __PRETTY_FUNCTION__ << fileList;
+  int fileCount = fileList.count();
+  if (fileCount > 0) {
+    QString first = fileList.takeFirst ();
+    if (first.endsWith (QString (".pdf"))) {
+      startPdf (first);
+    } else if (first.endsWith (QString (".epub"))) {
+      startEpub (first);
+    }
+  }
+}
+
+void
+Burid::startPdf (const QString & file)
+{
+  QString filename = (file.isEmpty() ? 
+                         QFileDialog::getOpenFileName (this, 
+                             QString ("Select PDF File to open"),
+                             ".",
+                             tr("PDF Files (*.pdf);; All Files (*)"))
+                      : file);
+  qDebug () << __PRETTY_FUNCTION__ << filename;
+  if (!filename.isEmpty()) { 
+    pdfPager->LoadPDF (filename);
+  }
+}
+
+void
+Burid::startEpub (const QString & file)
+{
+  QString filename = (file.isEmpty() ? 
+                        QFileDialog::getOpenFileName (this, 
+                            QString ("Select Epub File to open"),
+                            ".",
+                            tr("EPub books (*.epub);; All Files (*)"))
+                      : file);
+  qDebug () << __PRETTY_FUNCTION__ << filename;
   if (!filename.isEmpty()) { 
     epubDoc.openBook (filename);
   }

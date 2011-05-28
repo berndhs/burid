@@ -38,6 +38,7 @@ Rectangle {
   signal quitApp ()
   signal startReadEpub ()
   signal startReadPdf ()
+  signal finishedBook ()
 
   function loadEpub (theUrl) {
     showReadBox ("html")
@@ -173,6 +174,7 @@ Rectangle {
         gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.stopReading ()
+          mainRect.finishedBook ()
         }
       }
       ChoiceButton {

@@ -88,8 +88,7 @@ main (int argc, char *argv[])
   qDebug () << __PRETTY_FUNCTION__ << "   sizes " << appIcon.availableSizes();
   app.setWindowIcon (appIcon);
   burid.setWindowIcon (appIcon);
-  burid.Init (app);
-  burid.AddConfigMessages (configMessages);
+  burid.Init (app, opts.Arguments(), configMessages);
   burid.Run ();
   result = app.exec ();
   return result;

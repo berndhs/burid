@@ -42,11 +42,11 @@ public:
   virtual QImage requestImage (const QString & id, 
                               QSize * size, 
                         const QSize & requestedSize);
-#if 0
-  virtual QImage requestPixmap (const QString & id, 
+
+  virtual QPixmap requestPixmap (const QString & id, 
                               QSize * size, 
                         const QSize & requestedSize);
-#endif
+
 
 private:
 
