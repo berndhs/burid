@@ -43,6 +43,10 @@ Rectangle {
     showReadBox ("html")
     bookWebContentView.loadBook (theUrl)
   }
+  function continueEpub (theUrl, theOffset, theScale) {
+    showReadBox ("html")
+    bookWebContentView.continueBook (theUrl, theOffset, theScale)
+  }
   function loadPdf (thePage) {
     bookPdfContentView.loadImage (thePage)
   }

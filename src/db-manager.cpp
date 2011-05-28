@@ -56,17 +56,18 @@ DBManager::Start ()
 {
   QString dataDir = QDesktopServices::storageLocation
                     (QDesktopServices::DataLocation);
-  QString eventBasename = dataDir + QDir::separator() + QString ("library.sql");
-  eventBasename = Settings().value ("database/library",eventBasename).toString();
-  Settings().setValue ("database/library",eventBasename);
+  QString libraryBasename = dataDir + QDir::separator() + QString ("library.sql");
+  libraryBasename = Settings().value ("database/library",libraryBasename)
+                              .toString();
+  Settings().setValue ("database/library",libraryBasename);
   
 
-  StartDB (bookDB, "eventBaseCon", eventBasename);
+  StartDB (bookDB, "libraryBaseCon", libraryBasename);
 
-  QStringList  eventElements;
-  eventElements << "bookmarks";
+  QStringList  libraryElements;
+  libraryElements << "bookmarks";
 
-  CheckDBComplete (bookDB, eventElements);
+  CheckDBComplete (bookDB, libraryElements);
 }
 
 void
@@ -87,7 +88,7 @@ DBManager::StartDB (QSqlDatabase & db,
   CheckFileExists (dbFilename);
   db.setDatabaseName (dbFilename);
   bool ok = db.open ();
-qDebug () << " open db " << ok 
+  qDebug () << " open db " << ok 
           << " dbname " << db.databaseName ()
           << " file " << dbFilename;
 }
@@ -111,11 +112,11 @@ DBManager::CheckDBComplete (QSqlDatabase & db,
                             const QStringList & elements)
 {
   QString eltName, kind;
-qDebug () << " checking DB for elements " << elements;
+  qDebug () << " checking DB for elements " << elements;
   for (int e=0; e<elements.size(); e++) {
     eltName = elements.at(e);
     kind = ElementType (db, eltName).toUpper();
-qDebug () << " element " << eltName << " is kind " << kind;
+    qDebug () << " element " << eltName << " is kind " << kind;
     if (kind != "TABLE" && kind != "INDEX") {
       MakeElement (db, eltName);
     }
@@ -149,7 +150,7 @@ DBManager::Write (const Bookmark & bookmark)
   insert.bindValue (3,QVariant (bookmark.stringOffset ()));
   insert.bindValue (4,QVariant (bookmark.stringScale ()));
   bool ok = insert.exec ();
-  qDebug () << " event insert " << ok << insert.executedQuery();
+  qDebug () << " bookmark insert " << ok << insert.executedQuery();
   return ok;
 }
 
@@ -159,7 +160,7 @@ DBManager::ReadAll (const QString & bookfile,
 {
   QSqlQuery select (bookDB);
   QString cmd (QString ("select markname, spinetitle, pageoffset, scale "
-                        " from events "
+                        " from bookmarks "
                         " where bookfile = \"%1\"")
                .arg (bookfile));
   bool ok = select.exec (cmd);

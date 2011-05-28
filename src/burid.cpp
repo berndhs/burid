@@ -55,6 +55,8 @@ Burid::Burid (QWidget *parent)
 
   connect (&epubDoc, SIGNAL (startBook(const QString &)),
            this, SLOT (startReadEpub (const QString &)));
+  connect (&epubDoc, SIGNAL (jumpIntoBook (const QString &, qreal, qreal)),
+           this, SLOT (jumpToEpub (const QString &, qreal, qreal)));
 }
 
 Burid::~Burid ()
@@ -103,6 +105,7 @@ Burid::Run ()
   if (dcontext) {
     dcontext->setContextProperty ("pdfPagerIF",pdfPager);
     dcontext->setContextProperty ("epubControlIF",&epubDoc);
+    dcontext->setContextProperty ("epubBookmarkModel",epubDoc.bookmarkModel());
   }
   setSource (QUrl("qrc:/DefaultMain.qml"));
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
@@ -154,6 +157,18 @@ Burid::startEpub ()
                      tr("EPub books (*.epub);; All Files (*)"));
   if (!filename.isEmpty()) { 
     epubDoc.openBook (filename);
+  }
+}
+
+void
+Burid::jumpToEpub (const QString & url, qreal offset, qreal scale)
+{
+  qDebug () << __PRETTY_FUNCTION__ << url << offset << scale;
+  if (qmlRoot) {
+    QMetaObject::invokeMethod (qmlRoot, "continueEpub",
+              Q_ARG (QVariant, url),
+              Q_ARG (QVariant, offset),
+              Q_ARG (QVariant, scale));
   }
 }
 

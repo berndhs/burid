@@ -16,10 +16,11 @@
   <file alias="icon16.png">images/icon16.png</file>
 </qresource>
 <qresource>
-  <file alias="DefaultMain.qml">qml/DefaultMain.qml</file>
-  <file alias="ChoiceButton.qml">qml/ChoiceButton.qml</file>
-  <file alias="BookWebView.qml">qml/BookWebView.qml</file>
+  <file alias="BookmarkJumper.qml">qml/BookmarkJumper.qml</file>
   <file alias="BookPdfView.qml">qml/BookPdfView.qml</file>
+  <file alias="BookWebView.qml">qml/BookWebView.qml</file>
+  <file alias="ChoiceButton.qml">qml/ChoiceButton.qml</file>
+  <file alias="DefaultMain.qml">qml/DefaultMain.qml</file>
   <file alias="StringEnter.qml">qml/StringEnter.qml</file>
   <file alias="empty.png">qml/data/pdf/empty.png</file>
 </qresource>

@@ -39,8 +39,34 @@ namespace burid
 {
 EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
   :QObject (parent),
-   dbm (dbmanager)
+   dbm (dbmanager),
+   markModel (this)
 {
+}
+
+BookmarkModel *
+EpubDoc::bookmarkModel ()
+{
+  qDebug () << __PRETTY_FUNCTION__ << &markModel;
+  return &markModel;
+}
+
+void
+EpubDoc::jumpToBookmark (int index)
+{
+  qDebug () << __PRETTY_FUNCTION__ << " jump to row " << index;
+  if (0 <= index && index <= markModel.rowCount()) {
+    Bookmark  mark = markModel.bookmark (index);
+    QString item = mark.spineItem();
+    QString href = manifest[item].href;
+    double offset = mark.offset ();
+    double scale = mark.scale ();
+    QUrl nextUrl (currentDir + QDir::separator() + href);
+    if (nextUrl.scheme() == "") {
+      nextUrl.setScheme ("file");
+    }
+    emit jumpIntoBook (nextUrl.toString(), offset, scale);
+  }
 }
 
 QString
@@ -92,6 +118,14 @@ EpubDoc::mark (const QString & markText, double pageY, double pageScale)
                  pageY,
                  pageScale);
   dbm.Write (mark);
+  markModel.appendMark (mark);
+  emit marksChanged (markModel.rowCount());
+}
+
+int
+EpubDoc::markRowCount ()
+{
+  return markModel.rowCount();
 }
 
 QString
@@ -122,10 +156,10 @@ EpubDoc::openBook (const QString & filename)
     ReadManifests (doc.elementsByTagName ("manifest"));
     ReadSpines (doc.elementsByTagName ("spine"));
   }
-  qDebug () << __PRETTY_FUNCTION__ << " file " << contentName << ok;
-  qDebug () << "   Spine: " << spine;
   QString startUrl = startItem();
-  qDebug () << "    want them to read " << startUrl;
+  BookmarkList bookmarks;
+  dbm.ReadAll (origBookFile, bookmarks);
+  markModel.setList (bookmarks);
   emit startBook (startUrl);
 }
 

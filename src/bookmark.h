@@ -25,6 +25,7 @@
 
 #include <QString>
 #include <QList>
+#include <QDebug>
 
 namespace burid
 {
@@ -66,6 +67,8 @@ private:
 };
 
 typedef QList <Bookmark> BookmarkList;
+
+QDebug operator<< (QDebug dbg, const Bookmark & bm);
 
 } // namespace
 

@@ -80,6 +80,7 @@ HEADERS = \
           src/epub-doc.h \
           src/db-manager.h \
           src/bookmark.h \
+          src/bookmark-model.h \
           src/gpl2.h \
           src/cmdoptions.h \
           src/deliberate.h \
@@ -94,6 +95,7 @@ SOURCES = \
           src/epub-doc.cpp \
           src/db-manager.cpp \
           src/bookmark.cpp \
+          src/bookmark-model.cpp \
           src/cmdoptions.cpp \
           src/deliberate.cpp \
           src/version.cpp \

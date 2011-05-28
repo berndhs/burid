@@ -1,5 +1,5 @@
-#ifndef BURID_BURID_H
-#define BURID_BURID_H
+#ifndef BURID_BOOKMARK_MODEL_H
+#define BURID_BOOKMARK_MODEL_H
 
 
 /****************************************************************
@@ -24,59 +24,45 @@
  ****************************************************************/
 
 
-#include <QDeclarativeView>
-#include <QStringList>
-#include <QApplication>
-#include <QGraphicsObject>
-#include <QTimer>
-#include <QResizeEvent>
-#include "epub-doc.h"
-#include "pdf-pager.h"
-#include "db-manager.h"
+#include <QAbstractListModel>
+#include <QVariant>
+#include <QObject>
+#include "bookmark.h"
 
 namespace burid
 {
-class Burid: public QDeclarativeView
+
+class BookmarkModel : public QAbstractListModel
 {
 Q_OBJECT
+
 public:
 
-  Burid (QWidget *parent=0);
-  ~Burid ();
+  BookmarkModel (QObject *parent=0);
 
-  void Init (QApplication & qapp);
-  void AddConfigMessages (const QStringList & messages);
-  void Run ();
+  int rowCount (const QModelIndex & index = QModelIndex()) const;
+  QVariant data (const QModelIndex & index, int role = Qt::DisplayRole) const;
 
-public slots:
+  Bookmark bookmark (int row) const;
 
-  void Quit ();
+  Q_INVOKABLE QString markText (int row);
 
-private slots:
+  void setList (const BookmarkList & list);
 
-  void startPdf ();
-  void startEpub ();
-
-  void startReadEpub (const QString & startUrl);
-  void jumpToEpub (const QString & url, qreal offset, qreal scale);
-
-  void periodicSave ();
-
-protected:
-
-  void resizeEvent (QResizeEvent * event);
+  void appendMark (const Bookmark & mark);
 
 private:
 
-  QApplication     *app;
-  QStringList       configMessages;
-  QGraphicsObject  *qmlRoot;
+  enum Data_Type {
+    Type_File = Qt::UserRole+1,
+    Type_Mark = Qt::UserRole+2,
+    Type_Item = Qt::UserRole+3,
+    Type_Offset = Qt::UserRole+4,
+    Type_Scale = Qt::UserRole+5
+  };
 
-  DBManager             dbm;
-  EpubDoc               epubDoc;
-  PdfPager             *pdfPager;
-  
-  QTimer               saveTimer;
+  BookmarkList    dataList;
+
 };
 
 } // namespace

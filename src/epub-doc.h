@@ -31,6 +31,7 @@
 #include <QList>
 #include <QMap>
 #include "db-manager.h"
+#include "bookmark-model.h"
 
 namespace burid
 {
@@ -49,12 +50,21 @@ public:
                             qreal pageScale);
   Q_INVOKABLE QString nextBookmark();
 
+  Q_INVOKABLE BookmarkModel * bookmarkModel ();
+
+  Q_INVOKABLE int markRowCount();
+
+  Q_INVOKABLE void jumpToBookmark (int index);
+  
   void openBook (const QString & filename);
   void clearCache ();
+
 
 signals:
 
   void startBook (const QString & startUrl);
+  void jumpIntoBook (const QString & url, qreal offset, qreal scale);
+  void marksChanged (int markCount);
 
 private:
 
@@ -78,6 +88,7 @@ private:
                        QStringList & values);
 
   DBManager                    & dbm;
+  BookmarkModel                  markModel;
   QString                        currentDir;
   int                            currentSpineItem;
   QStringList                    currentAuthors;
@@ -86,6 +97,7 @@ private:
   QString                        origBookFile;
   QMap <QString, ManifestRec>    manifest;    // map of book part ids to files
   QList <QString>                spine;       // linear order of book parts
+
 
   QStringList    tempDirs;
 

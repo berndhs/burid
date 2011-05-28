@@ -65,4 +65,18 @@ Bookmark::stringScale (char format, int precision) const
  return QString::number (mScale, format, precision);
 }
 
+
+QDebug 
+operator<< (QDebug dbg, const Bookmark & bm)
+{
+  dbg.nospace() << "( Bookmark "
+                << " file " << bm.bookFile ()
+                << " mark " << bm.markName ()
+                << " spine " << bm.spineItem ()
+                << " offset " << bm.offset ()
+                << " scale " << bm.scale ()
+                << ")";
+  return dbg.space();
+}
+
 } // namespace

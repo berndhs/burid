@@ -11,6 +11,10 @@ Rectangle {
   {
     bookView.loadPage (theUrl,"top")
   }
+  function continueBook (theUrl, theOffset, theScale) 
+  {
+    bookView.loadPageMiddle (theUrl, theOffset, theScale)
+  }
 
   Rectangle {
     id: pageControlRect
@@ -40,6 +44,13 @@ Rectangle {
         onClicked: { bookView.back.trigger() }
       }
       ChoiceButton {
+        id: gotoButton
+        height: pageControlRect.height * 0.8
+        opacity: 0.7
+        labelText: qsTr ("To...")
+        onClicked: { bookmarkJump.show () }
+      }
+      ChoiceButton {
         id: markButton
         height: pageControlRect.height * 0.8
         opacity: 0.7
@@ -66,6 +77,28 @@ Rectangle {
     }
   }
 
+  BookmarkJumper {
+    id: bookmarkJump
+    width: bookViewBox.width * 0.9
+    height: 500 //bookViewBox.height * 0.9
+    anchors.centerIn: bookViewBox
+    listModel: epubBookmarkModel
+    markCount: -2
+    color: "green"
+    opacity: 0.0
+    z: parent.z + 3
+    function show ()
+    {
+      opacity = 0.9
+      //setFocus (true)
+    }
+    function hide ()
+    {
+      opacity = 0.0
+      //setFocus (false)
+    }
+  }
+
   StringEnter {
     id: bookmarkInput
     titleText: qsTr ("Bookmark Name")
@@ -75,6 +108,7 @@ Rectangle {
     width: parent.width * 0.8
     radius: 6
     z: parent.z + 3
+    anchors.centerIn: bookViewBox
     opacity: 0.0
     function show ()
     {
@@ -86,7 +120,6 @@ Rectangle {
       opacity = 0.0
       setFocus (false)
     }
-    anchors.centerIn: bookViewBox
     Behavior on opacity { NumberAnimation { duration: 90 } }
     onDidEscape: {
       hide ()
@@ -137,12 +170,21 @@ Rectangle {
       property real origScale: 1
       property real scrollXStep: -5
       property real scrollYStep: -5
+      property real continueY: 0
+      property real continueScale: 1
 
       property string displayEnd: "top"
 
       function loadPage (theUrl, theEnd)
       {
         displayEnd = theEnd
+        url = theUrl
+      }
+      function loadPageMiddle (theUrl, theOffset, theScale)
+      {
+        displayEnd = "middle"
+        continueY = theOffset
+        continueScale = theScale
         url = theUrl
       }
 
@@ -191,8 +233,25 @@ Rectangle {
         } else if (displayEnd == "bottom")
         {
           bookViewFlick.contentY = bookViewFlick.contentHeight - bookViewFlick.height
+        } else if (displayEnd == "middle")
+        {
+          bookViewFlick.contentY = continueY
+          contentsScale = continueScale
         }
       }
     }
+  }
+  Connections {
+    target: bookmarkJump
+    onJumpTo: {
+      epubControlIF.jumpToBookmark (row)
+      bookmarkJump.hide ()
+    }
+    onCancelJump: {
+      bookmarkJump.hide ()
+    }
+  }
+  Component.onCompleted: {
+    bookmarkJump.markCount = -3
   }
 }
