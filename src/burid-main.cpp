@@ -91,5 +91,6 @@ main (int argc, char *argv[])
   burid.Init (app, opts.Arguments(), configMessages);
   burid.Run ();
   result = app.exec ();
+  qDebug () << __PRETTY_FUNCTION__ << "All Done " << result;
   return result;
 }
