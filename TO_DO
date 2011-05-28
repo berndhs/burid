@@ -1,4 +1,5 @@
-- bookmarks
+- bookmarks  
+  X works ok for epub
 
 - show index
 
@@ -14,4 +15,6 @@
 - wait for unzip to actually finish, don't bet on it
 
 - accept file name on command line, for xdg-open
+
+- mouse wheel support
 

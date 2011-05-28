@@ -185,7 +185,12 @@ Rectangle {
         displayEnd = "middle"
         continueY = theOffset
         continueScale = theScale
-        url = theUrl
+        if (url == theUrl) {
+          bookViewFlick.contentY = continueY
+          contentsScale = continueScale
+        } else {
+          url = theUrl
+        }
       }
 
       Keys.onLeftPressed: bookViewFlick.contentX += scrollXStep
