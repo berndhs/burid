@@ -27,24 +27,51 @@
 #include <QDebug>
 #include <QLabel>
 #include <QPixmap>
+#include "image-provider.h"
 
 int burid::PdfPager::msgcount(1000);
 
 namespace burid
 {
-PdfPager::PdfPager (QObject *parent)
+PdfPager::PdfPager (QObject *parent, int physDpiX, int physDpiY)
   :QObject(parent),
-   QDeclarativeImageProvider (QDeclarativeImageProvider::Image),
+   imagePro (0),
    poppDoc (0),
-   xresDefault (72.0),
-   yresDefault (72.0)
+   xresDefault (physDpiX),
+   yresDefault (physDpiY)
 {
+  imagePro = new ImageProvider (QDeclarativeImageProvider::Image, this);
   xres = xresDefault;
   yres = yresDefault;
+  qDebug () << __PRETTY_FUNCTION__ << " physX " << xres << " physY " << yres;
 }
 
 PdfPager::~PdfPager ()
 {
+}
+
+int
+PdfPager::pageNum ()
+{
+  return pagenum;
+}
+
+int
+PdfPager::pageMax ()
+{
+  return pagemax;
+}
+
+void
+PdfPager::setPageNum (int p)
+{
+  pagenum = p;
+}
+
+QDeclarativeImageProvider *
+PdfPager::imageControl ()
+{
+  return imagePro;
 }
 
 void 
@@ -117,50 +144,16 @@ PdfPager::LoadPDFfromData (const QByteArray & pdfData)
 }
 
 QImage
-PdfPager::PageImage (Poppler::Document * pdoc, int pnum)
+PdfPager::PageImage (int pnum)
 {
-  qDebug () << __PRETTY_FUNCTION__ << pdoc << pnum;
-  if (pdoc && (0 <= pnum) && (pnum < pdoc->numPages())) {
-    Poppler::Page * page = pdoc->page (pnum);
+  qDebug () << __PRETTY_FUNCTION__  << pnum;
+  if (poppDoc && (0 <= pnum) && (pnum < poppDoc->numPages())) {
+    Poppler::Page * page = poppDoc->page (pnum);
     if (page) {
       return page->renderToImage (xres,yres);
     }
   }
   return QImage();
-}
-
-QImage
-PdfPager::requestImage (const QString & id,
-                            QSize * size,
-                      const QSize & requestedSize)
-{
-  qDebug () << __PRETTY_FUNCTION__ << " want iamge " << id << requestedSize << size;
-  QImage iconStart (QString("./images/icon128.png"),"PNG");
-  QImage iconBack (QString("./images/icon64.png"));
-  QImage iconForward (QString("./images/icon256.png"));
-  QImage returnImage;
-  if (id.startsWith (QString("start_"))) {
-    pagenum = 0;
-    returnImage = PageImage (poppDoc, pagenum);
-  } else if (id.startsWith (QString ("back_"))) {
-    if (pagenum > 0) { 
-      pagenum--; 
-    }
-    returnImage = PageImage (poppDoc, pagenum);
-  } else if (id.startsWith (QString ("forward_"))) {
-    if (pagenum < pagemax) {
-      pagenum++;
-    }
-    returnImage = PageImage (poppDoc, pagenum);
-  } else if (id.startsWith (QString("update_"))) {
-    returnImage = PageImage (poppDoc, pagenum);
-  }
-  qDebug () << "              incoming size " << *size;
-  if (size) {
-    *size = returnImage.size();
-  }
-  qDebug () << __PRETTY_FUNCTION__<< "    returning size " << returnImage.size();
-  return returnImage;
 }
 
 QString

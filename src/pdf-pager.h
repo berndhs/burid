@@ -34,20 +34,20 @@
 namespace burid
 {
 
-class PdfPager: public QObject, public QDeclarativeImageProvider
+class ImageProvider;
+
+class PdfPager: public QObject
 {
 Q_OBJECT
 public:
-  PdfPager (QObject *parent=0);
+  PdfPager (QObject *parent=0, int physDpiX=72, int physDpiY=72);
   ~PdfPager ();
 
-  virtual QImage requestImage (const QString & id, 
-                              QSize * size, 
-                        const QSize & requestedSize);
 
   Q_INVOKABLE QString nextImage (const QString & direction, int offset);
   Q_INVOKABLE QString startImage ();
   Q_INVOKABLE void keyPressed (int key, int modfier);
+  Q_INVOKABLE QDeclarativeImageProvider * imageControl ();
 
   void LoadPDF (const QString & filename);
   void LoadPDFfromData (const QByteArray & pdfData);
@@ -55,13 +55,20 @@ public:
   QStringList infoKeys ();
   QString     info (const QString & key);
 
+  int pageNum ();
+  void setPageNum (int p);
+
+  int pageMax ();
+
+  QImage PageImage (int pnum);
+
 signals:
 
   void updateImage (QString updateName);
 
 private:
 
-  QImage PageImage (Poppler::Document * pdoc, int pnum);
+  ImageProvider        *imagePro;
 
   Poppler::Document    *poppDoc;
   int                   pagenum;

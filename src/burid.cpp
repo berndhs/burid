@@ -44,7 +44,6 @@ Burid::Burid (QWidget *parent)
    saveTimer (this)
 {
   setResizeMode (QDeclarativeView::SizeRootObjectToView);
-  pdfPager = new PdfPager (0);
   QSize curSize = Settings ().value ("+size", size()).toSize();
   qDebug () << " want size " << curSize;
   resize (curSize);
@@ -101,6 +100,9 @@ Burid::Run ()
 {
   dbm.Start ();
   
+  if (pdfPager == 0) {
+    pdfPager = new PdfPager (this, physicalDpiX(), physicalDpiY());
+  }
   QDeclarativeContext * dcontext = rootContext();
   if (dcontext) {
     dcontext->setContextProperty ("pdfPagerIF",pdfPager);
@@ -131,9 +133,10 @@ Burid::Run ()
   QDeclarativeEngine * dengine = engine();
   qDebug () << __PRETTY_FUNCTION__ << " engine " << dengine;
   if (dengine) {
-    dengine->addImageProvider(QString("pdfpager"),pdfPager);
+    dengine->addImageProvider(QString("pdfpager"),pdfPager->imageControl());
     qDebug () << "   image providers " << dengine->imageProvider (QString("pdfpager"));
     qDebug () << "   pdf pager       " << pdfPager;
+    qDebug () << "   image pro       " << pdfPager->imageControl();
   }
 }
 
@@ -141,10 +144,16 @@ void
 Burid::startPdf ()
 {
   qDebug () << __PRETTY_FUNCTION__;
-  pdfPager->LoadPDF ("data/pdf/control_arxiv.pdf");
-  QStringList keys = pdfPager->infoKeys ();
-  for (int i=0; i< keys.count(); i++) {
-    qDebug () << "    doc " << keys.at(i) << pdfPager->info (keys.at(i));
+  QString filename = QFileDialog::getOpenFileName (this, 
+                     QString ("Select PDF File to open"),
+                     ".",
+                     tr("PDF Files (*.pdf);; All Files (*)"));
+  if (!filename.isEmpty()) { 
+    pdfPager->LoadPDF (filename);
+    QStringList keys = pdfPager->infoKeys ();
+    for (int i=0; i< keys.count(); i++) {
+      qDebug () << "    doc " << keys.at(i) << pdfPager->info (keys.at(i));
+    }
   }
 }
 
