@@ -30,6 +30,7 @@
 #include <QDomNodeList>
 #include <QList>
 #include <QMap>
+#include <QProcess>
 #include "db-manager.h"
 #include "bookmark-model.h"
 
@@ -62,6 +63,12 @@ public:
   void openBook (const QString & filename);
   void clearCache ();
 
+private slots:
+
+  void unpackStarted ();
+  void unpackError (QProcess::ProcessError err);
+  void unpackDone (int exitCode, QProcess::ExitStatus exitStatus);
+
 
 signals:
 
@@ -84,7 +91,7 @@ private:
       QString    mediaType;
   };
 
-  void unzip (const QString & compressedName, QString & clearName);
+  void unzip (const QString & compressedName);
   void ReadMeta (const QDomNodeList & manifests);
   void ReadManifests (const QDomNodeList & manifests);
   void ReadSpines (const QDomNodeList & spines);
@@ -93,6 +100,8 @@ private:
 
   DBManager                    & dbm;
   BookmarkModel                  markModel;
+  QProcess                       unpacker;
+  QString                        unpackTmpName;
   QString                        currentDir;
   int                            currentSpineItem;
   QStringList                    currentAuthors;

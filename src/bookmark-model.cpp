@@ -44,24 +44,18 @@ int
 BookmarkModel::rowCount (const QModelIndex & index) const
 {
   Q_UNUSED (index)
-  qDebug () << "-------------------------------------";
-  qDebug () << __PRETTY_FUNCTION__ << dataList.count();
   return dataList.count();
 }
 
 QString
 BookmarkModel::markText (int row)
 {
-  qDebug () << ",,,,,,,,,,,,,,,,,,,,,,,,, " ;
-  qDebug () << __PRETTY_FUNCTION__ << row << dataList.at(row).markName();
   return dataList.at(row).markName();
 }
 
 QVariant
 BookmarkModel::data (const QModelIndex & index, int role) const
 {
-  qDebug () << "-------------------------------------";
-  qDebug () << __PRETTY_FUNCTION__ << index << role << index.isValid();
   if (!index.isValid()) {
     return QVariant();
   }
@@ -99,7 +93,6 @@ BookmarkModel::bookmark (int row) const
 void
 BookmarkModel::setList (const BookmarkList & list)
 {
-  qDebug () << __PRETTY_FUNCTION__ << list;
   int nr = rowCount();
   if (nr > 0) {
     beginRemoveRows (QModelIndex(), 0, nr+1);
@@ -110,10 +103,6 @@ BookmarkModel::setList (const BookmarkList & list)
   beginInsertRows (QModelIndex(), 0, nr+1);
   dataList = list;
   endInsertRows ();
-  qDebug () << "             inserted " << nr << " new rows";
-  //QModelIndex topleft =  createIndex (0,0);
-  //QModelIndex botright = createIndex (nr-1,0);
-  reset ();
 }
 
 void

@@ -65,6 +65,7 @@ private slots:
 
   void doneReading ();
 
+
 protected:
 
   void resizeEvent (QResizeEvent * event);

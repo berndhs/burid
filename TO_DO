@@ -13,6 +13,7 @@
 - epub multiple rootfiles in single package
 
 - wait for unzip to actually finish, don't bet on it
+  - partially done, wait but no error handling
 
 - accept file name on command line, for xdg-open
   X works, open 1 file at a time

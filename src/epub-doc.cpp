@@ -27,7 +27,6 @@
 #include <QDomDocument>
 #include <QDesktopServices>
 #include <QDir>
-#include <QProcess>
 #include <QUuid>
 #include <QUrl>
 #include <QMessageBox>
@@ -41,8 +40,14 @@ EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
   :QObject (parent),
    dbm (dbmanager),
    markModel (this),
+   unpacker (this),
    currentSpineItem (0)
 {
+  connect (&unpacker, SIGNAL (started()), this, SLOT (unpackStarted()));
+  connect (&unpacker, SIGNAL (finished(int, QProcess::ExitStatus)), 
+            this, SLOT (unpackDone(int, QProcess::ExitStatus)));
+  connect (&unpacker, SIGNAL (error(QProcess::ProcessError)), 
+            this, SLOT (unpackError(QProcess::ProcessError)));
 }
 
 BookmarkModel *
@@ -155,13 +160,84 @@ EpubDoc::openBook (const QString & filename)
   manifest.clear ();
   spine.clear ();
   origBookFile = filename;
+  unzip (filename);
+}
+
+void
+EpubDoc::unzip (const QString & compressedName)
+{
+  QString tmpRoot = QDesktopServices::storageLocation 
+                      (QDesktopServices::TempLocation);
+  QString tmpName (tmpRoot + QDir::separator() 
+                    + QString("burid") + QDir::separator()
+                    + "unpack_");
+  tmpName.append (QUuid::createUuid().toString().remove(QRegExp("[{}-]")));
+  QDir tmpRootDir (tmpRoot);
+  tmpRootDir.mkpath (tmpName);
+  tempDirs.append (tmpName);
+  #if BURID_UNZIP_UNIX
+  QStringList args;
+  args.append (compressedName);
+  args.append ("-d");
+  args.append (tmpName);
+  unpackTmpName = tmpName;
+  unpacker.start (Magic::UnzipProgram, args);
+  #else
+  QMessageBox::warning (0, QString("No Umcompress!"),
+                     tr("Don't know how to Unzip EPUB on this system"));
+  #endif
+}
+
+void
+EpubDoc::unpackStarted ()
+{
+  qDebug () << __PRETTY_FUNCTION__;
+}
+
+void
+EpubDoc::unpackError (QProcess::ProcessError err)
+{
+  qDebug () << __PRETTY_FUNCTION__ << err;
+}
+
+void
+EpubDoc::unpackDone (int exitCode, QProcess::ExitStatus exitStatus)
+{
+  qDebug () << __PRETTY_FUNCTION__;
+  if (exitCode != 0 || exitStatus != QProcess::NormalExit) {
+    qDebug () << " Bad Unpack Process Exit " << exitCode << exitStatus;
+    return;
+  }
+  QString tmpName = unpackTmpName;
+  QDir unpackDir (tmpName);
+  QFile metaFile (tmpName + QDir::separator() + QString("META-INF")
+                  +QDir::separator() + QString("container.xml"));
+  bool ok = metaFile.open (QFile::ReadOnly);
+  if (!ok) {
+    QMessageBox::warning (0, QString ("No Metafile!"),
+                      metaFile.fileName());
+    return;
+  }
+  QDomDocument metaDoc;
+  metaDoc.setContent (&metaFile);
+  QDomNodeList  rootfiles = metaDoc.elementsByTagName ("rootfile");
   QString contentName;
-  unzip (filename, contentName);
+  if (rootfiles.count() >= 1) {
+     QString fullPath = rootfiles.at(0).toElement().attribute("full-path");
+     if (fullPath.length() > 0) {
+       contentName = tmpName + QDir::separator()
+                   + fullPath;
+       currentDir = QFileInfo (contentName).absolutePath();
+     }
+  }
+  //QMessageBox::information (0, QString("content name"), contentName);
+  qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << contentName;
+
   if (contentName.isEmpty()) {
     return;
   }
   QFile  infile (contentName);
-  bool ok = infile.open (QFile::ReadOnly);
+  ok = infile.open (QFile::ReadOnly);
   if (ok) {
     QDomDocument  doc;
     qDebug () << __PRETTY_FUNCTION__ << " before setContent";
@@ -241,52 +317,6 @@ EpubDoc::ReadSpines (const QDomNodeList & spines)
   }
 }
 
-void
-EpubDoc::unzip (const QString & compressedName, QString & contentName)
-{
-  contentName.clear();
-  QString tmpRoot = QDesktopServices::storageLocation 
-                      (QDesktopServices::TempLocation);
-  QString tmpName (tmpRoot + QDir::separator() 
-                    + QString("burid") + QDir::separator()
-                    + "unpack_");
-  tmpName.append (QUuid::createUuid().toString().remove(QRegExp("[{}-]")));
-  QDir tmpRootDir (tmpRoot);
-  tmpRootDir.mkpath (tmpName);
-  tempDirs.append (tmpName);
-  #if BURID_UNZIP_UNIX
-  QStringList args;
-  args.append (compressedName);
-  args.append ("-d");
-  args.append (tmpName);
-  QProcess::execute (Magic::UnzipProgram, args);
-  #else
-  QMessageBox::warning (0, QString("No Umcompress!"),
-                     tr("Don't know how to Unzip EPUB on this system"));
-  #endif
-  QDir unpackDir (tmpName);
-  QFile metaFile (tmpName + QDir::separator() + QString("META-INF")
-                  +QDir::separator() + QString("container.xml"));
-  bool ok = metaFile.open (QFile::ReadOnly);
-  if (!ok) {
-    QMessageBox::warning (0, QString ("No Metafile!"),
-                      metaFile.fileName());
-    return;
-  }
-  QDomDocument metaDoc;
-  metaDoc.setContent (&metaFile);
-  QDomNodeList  rootfiles = metaDoc.elementsByTagName ("rootfile");
-  if (rootfiles.count() >= 1) {
-     QString fullPath = rootfiles.at(0).toElement().attribute("full-path");
-     if (fullPath.length() > 0) {
-       contentName = tmpName + QDir::separator()
-                   + fullPath;
-       currentDir = QFileInfo (contentName).absolutePath();
-     }
-  }
-  //QMessageBox::information (0, QString("content name"), contentName);
-  qDebug () << __PRETTY_FUNCTION__ << "  tmp unzipped should be " << contentName;
-}
 
 void
 EpubDoc::clearCache ()
