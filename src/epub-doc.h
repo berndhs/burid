@@ -55,6 +55,9 @@ public:
   Q_INVOKABLE int markRowCount();
 
   Q_INVOKABLE void jumpToBookmark (int index);
+
+  Q_PROPERTY(QString contentPart READ contentPart NOTIFY partChanged);
+  QString contentPart ();
   
   void openBook (const QString & filename);
   void clearCache ();
@@ -65,6 +68,7 @@ signals:
   void startBook (const QString & startUrl);
   void jumpIntoBook (const QString & url, qreal offset, qreal scale);
   void marksChanged (int markCount);
+  void partChanged (const QString & contentPart);
 
 private:
 

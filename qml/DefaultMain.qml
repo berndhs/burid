@@ -140,6 +140,16 @@ Rectangle {
       GradientStop { position: 1.0; color: mainMenuButtonFade }
     }
 
+    Rectangle {
+      id: epubContentHead
+      color: "transparent"
+      width: childrenRect.width
+      height: parent.height
+      visible: bookWebViewRect.bookVisible
+      anchors { left: parent.left; verticalCenter: parent.verticalCenter }
+      Text { text: bookWebContentView.headLine }
+    }
+
     Row {
       anchors.centerIn: parent
       spacing: parent.width * 0.1

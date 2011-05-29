@@ -15,6 +15,7 @@
 - wait for unzip to actually finish, don't bet on it
 
 - accept file name on command line, for xdg-open
+  X works, open 1 file at a time
 
 - mouse wheel support
 

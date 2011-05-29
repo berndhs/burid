@@ -6,6 +6,7 @@ Rectangle {
   id: bookViewBox
   clip: true
   property alias currentPageY: bookViewFlick.contentY
+  property string headLine: epubControlIF.contentPart
 
   function loadBook (theUrl)
   {
@@ -80,7 +81,7 @@ Rectangle {
   BookmarkJumper {
     id: bookmarkJump
     width: bookViewBox.width * 0.9
-    height: 500 //bookViewBox.height * 0.9
+    height: bookViewBox.height * 0.9
     anchors.centerIn: bookViewBox
     listModel: epubBookmarkModel
     markCount: -2
@@ -89,7 +90,7 @@ Rectangle {
     z: parent.z + 3
     function show ()
     {
-      opacity = 0.9
+      opacity = 0.85
       //setFocus (true)
     }
     function hide ()
@@ -129,6 +130,17 @@ Rectangle {
       hide ()
     }
   }
+
+    ScrollBar {
+      id: bookViewScrollIndicator
+      width: parent.height * 0.02
+      height: bookViewBox.height
+      anchors { right: parent.right; top: parent.top }
+      opacity: 1
+      z: bookViewFlick.z + 4
+      position: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.yPosition : 1)
+      realtivePageSize: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.heightRatio : 1)
+    }
 
   Flickable {
     id: bookViewFlick

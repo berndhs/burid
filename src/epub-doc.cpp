@@ -40,7 +40,8 @@ namespace burid
 EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
   :QObject (parent),
    dbm (dbmanager),
-   markModel (this)
+   markModel (this),
+   currentSpineItem (0)
 {
 }
 
@@ -66,6 +67,8 @@ EpubDoc::jumpToBookmark (int index)
       nextUrl.setScheme ("file");
     }
     emit jumpIntoBook (nextUrl.toString(), offset, scale);
+    currentSpineItem = spine.indexOf (item);
+    emit partChanged(contentPart());
   }
 }
 
@@ -81,6 +84,7 @@ EpubDoc::nextItem (int offset)
     if (nextUrl.scheme() == "") {
       nextUrl.setScheme ("file");
     }
+    emit partChanged(contentPart());
     retval = nextUrl.toString();
   } 
   //QMessageBox::information (0,QString("Next Page Url"),retval);
@@ -92,6 +96,7 @@ EpubDoc::startItem ()
 {
   qDebug () << __PRETTY_FUNCTION__;
   currentSpineItem = 0;
+  emit partChanged(contentPart());
   QString retval;
   if (spine.count() > 0) {
     QUrl startUrl ( currentDir + QDir::separator() 
@@ -106,6 +111,15 @@ EpubDoc::startItem ()
   //QMessageBox::information (0,QString("Start Page Url"),retval);
   return retval;
 }
+
+QString
+EpubDoc::contentPart ()
+{
+  return tr ("Part %1 of %2")
+           .arg (currentSpineItem+1)
+           .arg (spine.count());
+}
+
 
 void
 EpubDoc::mark (const QString & markText, double pageY, double pageScale)
