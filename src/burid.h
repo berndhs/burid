@@ -80,8 +80,8 @@ private:
   DBManager             dbm;
   EpubDoc               epubDoc;
   PdfPager             *pdfPager;
-  
-  QTimer               saveTimer;
+   
+  QTimer                saveTimer;
 };
 
 } // namespace

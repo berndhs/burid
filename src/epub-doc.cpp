@@ -34,7 +34,6 @@
 #include <QDebug>
 #include "burid-magic.h"
 #include "bookmark.h"
-#include "recent-book.h"
 #include "deliberate.h"
 
 using namespace deliberate;
@@ -45,6 +44,7 @@ EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
   :QObject (parent),
    dbm (dbmanager),
    markModel (this),
+   recentBooks (this),
    unpacker (this),
    currentSpineItem (0),
    maxRecentBooks (10)
@@ -54,8 +54,20 @@ EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
             this, SLOT (unpackDone(int, QProcess::ExitStatus)));
   connect (&unpacker, SIGNAL (error(QProcess::ProcessError)), 
             this, SLOT (unpackError(QProcess::ProcessError)));
+  connect (&dbm, SIGNAL (Started()), this, SLOT (resetDB()));
   maxRecentBooks = Settings ().value ("maxrecentbooks",maxRecentBooks).toInt();
   Settings().setValue ("maxrecentbooks",maxRecentBooks);
+  RecentBookList books;
+  dbm.ReadAll (books);
+  recentBooks.setList (books);
+}
+
+void
+EpubDoc::resetDB ()
+{
+  RecentBookList books;
+  dbm.ReadAll (books);
+  recentBooks.setList (books);
 }
 
 BookmarkModel *
@@ -63,6 +75,31 @@ EpubDoc::bookmarkModel ()
 {
   qDebug () << __PRETTY_FUNCTION__ << &markModel;
   return &markModel;
+}
+
+RecentBookModel *
+EpubDoc::recentBookModel ()
+{
+  return &recentBooks;
+}
+
+void
+EpubDoc::openRecentBook (int index)
+{
+  if (recentBooks.haveRow (index)) {
+    RecentBook book = recentBooks.recentBook (index);
+    openBook (book.filename()); 
+  }
+}
+
+void
+EpubDoc::forgetRecentBook (int index)
+{
+  if (recentBooks.haveRow (index)) {
+    RecentBook book = recentBooks.recentBook (index);
+    recentBooks.removeRow (index);
+    dbm.Remove (book);
+  }
 }
 
 void
@@ -273,6 +310,7 @@ EpubDoc::unpackDone (int exitCode, QProcess::ExitStatus exitStatus)
                      QDateTime::currentDateTime().toTime_t(),
                      origBookFile);
   dbm.Write (book);
+  resetDB ();
 }
 
 void

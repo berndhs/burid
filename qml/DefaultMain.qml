@@ -17,7 +17,7 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA  02110-1301, USA.
  ****************************************************************/
 
@@ -28,7 +28,7 @@ Rectangle {
   objectName: "DefaultMain_mainRect"
 
   property string appTitle: "BuRid Book Reader"
-  property real topReserve: 20  
+  property real topReserve: 20
   property string mainMenuButtonColor: "#b4a470"
   property string mainMenuButtonFade: "#fbdff7"
 
@@ -39,30 +39,45 @@ Rectangle {
   signal startReadPdf ()
   signal finishedBook ()
 
-  function loadEpub (theUrl) {
+  function loadEpub (theUrl)
+  {
     showReadBox ("html")
     bookWebContentView.loadBook (theUrl)
   }
-  function continueEpub (theUrl, theOffset, theScale) {
+  function continueEpub (theUrl, theOffset, theScale)
+  {
     showReadBox ("html")
     bookWebContentView.continueBook (theUrl, theOffset, theScale)
   }
-  function loadPdf (thePage) {
+  function loadPdf (thePage)
+  {
     bookPdfContentView.loadImage (thePage)
   }
-  function readBook () {
+  function readBook ()
+  {
     startReadEpub ()
     console.log (" DefaultMain readBook")
   }
-  function readPdf () {
+  function readPdf ()
+  {
     startReadPdf ()
     console.log (" DefaultMain readPdf")
     showReadBox ("pdf")
   }
-  function stopReading () {
+  function stopReading ()
+  {
     hideReadBox ()
   }
-  function showReadBox (theFormat) {
+  function recentEpubs ()
+  {
+    console.log ("Recent Epubs")
+    recentEpubRect.show ()
+    titleBox.height = titleBox.hiddenHeigh
+    showMainSelection (false)
+    mainRect.topReserve = 0
+  }
+  function showReadBox (theFormat)
+  {
     if (theFormat == "html") {
       bookWebViewRect.show ()
       bookPdfViewRect.hide ()
@@ -70,25 +85,29 @@ Rectangle {
       bookWebViewRect.hide ()
       bookPdfViewRect.show ()
     }
+    recentEpubRect.hide ()
     titleBox.height = titleBox.hiddenHeight
-    stopButton.visible = true
-    bookEpubButton.visible = false
-    bookPdfButton.visible = false
-    titleBox.showTitle = false
+    showMainSelection (false)
     mainRect.topReserve = 0
     if (theFormat == "pdf") {
       loadPdf (pdfPagerIF.startImage())
     }
   }
-  function hideReadBox () {
+  function hideReadBox ()
+  {
     bookWebViewRect.hide ()
     bookPdfViewRect.hide ()
+    recentEpubRect.hide ()
     titleBox.height = titleBox.visibleHeight
-    stopButton.visible = false
-    bookEpubButton.visible = true
-    bookPdfButton.visible = true
-    titleBox.showTitle = true
+    showMainSelection (true)
     mainRect.topReserve = 20
+  }
+  function showMainSelection (visi) {
+    bookEpubButton.visible = visi
+    bookPdfButton.visible = visi
+    recentEpubButton.visible = visi
+    titleBox.showTitle = visi
+    stopButton.visible = !visi
   }
 
   width: 600
@@ -109,7 +128,7 @@ Rectangle {
       topMargin: topReserve
     }
     color: "#f7f7f7"
-    Text { 
+    Text {
       anchors.centerIn: parent
       visible: titleBox.showTitle
       style: Text.Sunken
@@ -124,9 +143,9 @@ Rectangle {
 
   Rectangle {
     id: buttonRowRect
-    height: 32
+    height: childrenRect.height
     width: parent.width
-    property real buttonHeight: height
+    property real buttonHeight: 32
     color: "transparent"
     anchors {
       top: titleBox.bottom
@@ -152,15 +171,29 @@ Rectangle {
     Row {
       anchors.centerIn: parent
       spacing: parent.width * 0.1
-      ChoiceButton {
-        id: bookEpubButton
-        visible: true
-        height: buttonRowRect.buttonHeight
-        radius: height * 0.5
-        labelText: qsTr ("Read EPub")
-        gradient: mainMenuButtonGradient
-        onClicked: {
-          mainRect.readBook ()
+      Column {
+        spacing: 8
+        ChoiceButton {
+          id: bookEpubButton
+          visible: true
+          height: buttonRowRect.buttonHeight
+          radius: height * 0.5
+          labelText: qsTr ("Open EPub")
+          gradient: mainMenuButtonGradient
+          onClicked: {
+            mainRect.readBook ()
+          }
+        }
+        ChoiceButton {
+          id: recentEpubButton
+          visible: true
+          height: buttonRowRect.buttonHeight
+          radius: height * 0.5
+          labelText: qsTr ("Recent EPub")
+          gradient: mainMenuButtonGradient
+          onClicked: {
+            mainRect.recentEpubs ()
+          }
         }
       }
       ChoiceButton {
@@ -179,7 +212,7 @@ Rectangle {
         visible: false
         height: buttonRowRect.buttonHeight
         radius: height * 0.5
-        labelText: qsTr ("Stop Reading")
+        labelText: qsTr ("Close")
         gradient: mainMenuButtonGradient
         onClicked: {
           mainRect.stopReading ()
@@ -206,17 +239,22 @@ Rectangle {
     property real hiddenHeight: 0
     property bool bookVisible: false
 
-    function show () {
+    function show ()
+    {
       height = visibleHeight
       bookVisible = true
     }
-    function hide () {
+    function hide ()
+    {
       height = 0
       bookVisible = false
     }
-    function ensureHeight () {
+    function ensureHeight ()
+    {
       visibleHeight = parent.height - buttonRowRect.height - parent.topReserve
-      if (bookVisible) { height = visibleHeight }
+      if (bookVisible) {
+        height = visibleHeight
+      }
     }
 
     height: hiddenHeight
@@ -239,24 +277,76 @@ Rectangle {
   }
 
   Rectangle {
+    id: recentEpubRect
+    property real visibleHeight:  parent.height - buttonRowRect.height - parent.topReserve
+    property real hiddenHeight: 0
+    property bool listVisible: false
+
+    width: parent.width
+    height: hiddenHeight
+    anchors {
+      top: buttonRowRect.bottom
+      left: parent.left
+    }
+
+    function show ()
+    {
+      height = visibleHeight
+      listVisible = true
+    }
+    function hide ()
+    {
+      height = 0
+      listVisible = false
+    }
+
+    Behavior  on height {
+      NumberAnimation { duration: 250 }
+    }
+    RecentEpub {
+      width: parent.width
+      height: parent.height
+      listModel: recentEpubModel
+      visible: recentEpubRect.listVisible
+      onOpenBook: {
+        console.log ("open recent book " + row)
+        epubControlIF.openRecentBook (row)
+      }
+      onForgetBook: {
+        console.log ("forget recent book " + row)
+        epubControlIF.forgetRecentBook (row)
+      }
+      onCancelSelect: {
+        console.log ("cancel view recent books")
+        mainRect: hideReadBox ()
+      }
+    }
+  }
+
+  Rectangle {
     id: bookPdfViewRect
     width: parent.width
     property real visibleHeight: parent.height - buttonRowRect.height - parent.topReserve
     property real hiddenHeight: 0
     property bool bookVisible: false
-    
-    function show () {
+
+    function show ()
+    {
       height = visibleHeight
       bookVisible = true
     }
-    function hide () {
+    function hide ()
+    {
       height = 0
       bookVisible = false
     }
-    function ensureHeight () {
+    function ensureHeight ()
+    {
       visibleHeight = parent.height - buttonRowRect.height - parent.topReserve
-      if (bookVisible) { height = visibleHeight }
-    }    
+      if (bookVisible) {
+        height = visibleHeight
+      }
+    }
 
     height: hiddenHeight
     color: "#f7f0f0"

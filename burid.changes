@@ -1,6 +1,9 @@
-* Sun May 29 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.5-1
+* Mon May 30 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.6-1
+- remember recent books
 
+* Sun May 29 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.5-1
 - delete bookmarks
+
 * Sat May 28 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.4-1
 - fix pdf crash
 - elementary normal pdf version to select file

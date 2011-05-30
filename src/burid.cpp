@@ -106,6 +106,7 @@ Burid::Run ()
     dcontext->setContextProperty ("pdfPagerIF",pdfPager);
     dcontext->setContextProperty ("epubControlIF",&epubDoc);
     dcontext->setContextProperty ("epubBookmarkModel",epubDoc.bookmarkModel());
+    dcontext->setContextProperty ("recentEpubModel",epubDoc.recentBookModel());
   }
   setSource (QUrl("qrc:/DefaultMain.qml"));
   setResizeMode (QDeclarativeView::SizeRootObjectToView);

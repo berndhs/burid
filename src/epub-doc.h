@@ -33,6 +33,7 @@
 #include <QProcess>
 #include "db-manager.h"
 #include "bookmark-model.h"
+#include "recent-model.h"
 
 namespace burid
 {
@@ -53,10 +54,13 @@ public:
   Q_INVOKABLE QString nextBookmark();
 
   Q_INVOKABLE BookmarkModel * bookmarkModel ();
+  Q_INVOKABLE RecentBookModel * recentBookModel ();
 
   Q_INVOKABLE int markRowCount();
 
   Q_INVOKABLE void jumpToBookmark (int index);
+  Q_INVOKABLE void openRecentBook (int index);
+  Q_INVOKABLE void forgetRecentBook (int index);
 
   Q_PROPERTY(QString contentPart READ contentPart NOTIFY partChanged);
   QString contentPart ();
@@ -70,6 +74,7 @@ private slots:
   void unpackError (QProcess::ProcessError err);
   void unpackDone (int exitCode, QProcess::ExitStatus exitStatus);
 
+  void resetDB ();
 
 signals:
 
@@ -101,6 +106,7 @@ private:
 
   DBManager                    & dbm;
   BookmarkModel                  markModel;
+  RecentBookModel                recentBooks;
   QProcess                       unpacker;
   QString                        unpackTmpName;
   QString                        currentDir;

@@ -52,6 +52,10 @@ public:
                        BookmarkList & list);
   bool  ReadAll (RecentBookList & bookList);
 
+signals:
+
+  void Started ();
+
 private:
 
   void StartDB (QSqlDatabase & db,

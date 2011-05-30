@@ -69,6 +69,8 @@ DBManager::Start ()
                   << "recentbooks";
 
   CheckDBComplete (bookDB, libraryElements);
+ 
+  emit Started ();
 }
 
 void
@@ -198,11 +200,9 @@ DBManager::Remove (const RecentBook & book)
   QString pat ("delete from recentbooks where "
                    "title = \"%1\" AND "
                    "author = \"%2\" AND "
-                   "lastseen = \"%3\" AND "
-                   "filename = \"%4\" ");
+                   "filename = \"%3\" ");
   bool ok = remove.exec (pat.arg (book.title())
                             .arg (book.author())
-                            .arg (book.lastSeen())
                             .arg (book.filename()) );
   qDebug () << __PRETTY_FUNCTION__ 
             << " recentbook remove " << ok << remove.executedQuery();

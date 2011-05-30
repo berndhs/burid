@@ -1,12 +1,32 @@
 
+
+/****************************************************************
+ * This file is distributed under the following license:
+ *
+ * Copyright (C) 2011, Bernd Stramm
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+ *  Boston, MA  02110-1301, USA.
+ ****************************************************************/
+
 import QtQuick 1.0
 
 
 Rectangle {
-  id:
-  bookmarkJump
-  property alias listModel:
-  listView.model
+  id: bookmarkJump
+  property alias listModel: listView.model
   property int markCount:  -1
   property string forgetButtonColor: "#a4c470"
   property string forgetButtonFade: "#dbfbf7"
@@ -29,8 +49,7 @@ Rectangle {
     GradientStop { position: 1.0; color: forgetButtonFade }
   }
   Rectangle {
-    id:
-    headlineRect
+    id: headlineRect
     width: parent.width
     height: 1.5 * normalTextHeight
     radius: bookmarkJump.radius
@@ -40,7 +59,7 @@ Rectangle {
         verticalCenter: parent.verticalCenter;
         horizontalCenter: parent.horizontalCenter
       }
-      text: qsTr (" Bookmarks")
+      text: qsTr ("Bookmarks")
     }
     MouseArea {
       anchors.fill: parent
@@ -49,8 +68,7 @@ Rectangle {
   }
 
   Component {
-    id:
-    defaultDelegate
+    id: defaultDelegate
     Row {
       ChoiceButton {
         height: normalTextHeight
@@ -81,24 +99,14 @@ Rectangle {
   }
 
   ListView {
-    id:
-    listView
-    height:
-    parent.height - headlineRect.height
-    width:
-    parent.width
+    id:  listView
+    height: parent.height - headlineRect.height
+    width: parent.width
     anchors {
-      top:
-      headlineRect.bottom;
-      left:
-      bookmarkJump.left
+      top: headlineRect.bottom;
+      left: bookmarkJump.left
     }
     delegate: defaultDelegate
-  }
-  Component.onCompleted:
-  {
-    console.log ("BookmarkJumper completed w " + width + " h " + height)
-    console.log ("       ListView          w " + listView.width + " h " + listView.height)
   }
 }
 
