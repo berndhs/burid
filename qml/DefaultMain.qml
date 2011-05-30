@@ -171,7 +171,7 @@ Rectangle {
     Row {
       anchors.centerIn: parent
       spacing: parent.width * 0.1
-      Column {
+      Row {
         spacing: 8
         ChoiceButton {
           id: bookEpubButton
