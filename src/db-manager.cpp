@@ -65,7 +65,8 @@ DBManager::Start ()
   StartDB (bookDB, "libraryBaseCon", libraryBasename);
 
   QStringList  libraryElements;
-  libraryElements << "bookmarks";
+  libraryElements << "bookmarks"
+                  << "recentbooks";
 
   CheckDBComplete (bookDB, libraryElements);
 }
@@ -155,6 +156,22 @@ DBManager::Write (const Bookmark & bookmark)
 }
 
 bool
+DBManager::Write (const RecentBook & book)
+{
+  QSqlQuery insert (bookDB);
+  insert.prepare ("insert or replace into recentbooks "
+                  " (title, author, lastseen, filename) "
+                  " values (?, ?, ?, ?)");
+  insert.bindValue (0,QVariant (book.title ()));
+  insert.bindValue (1,QVariant (book.author ()));
+  insert.bindValue (2,QVariant (book.lastSeen ()));
+  insert.bindValue (3,QVariant (book.filename ()));
+  bool ok = insert.exec ();
+  qDebug () << " bookmark insert " << ok << insert.executedQuery();
+  return ok;
+}
+
+bool
 DBManager::Remove (const Bookmark & bookmark)
 {
   QSqlQuery remove (bookDB);
@@ -169,7 +186,26 @@ DBManager::Remove (const Bookmark & bookmark)
                             .arg (bookmark.spineItem())
                             .arg (bookmark.stringOffset())
                             .arg (bookmark.stringScale()) );
-  qDebug () << " bookmark remove " << ok << remove.executedQuery();
+  qDebug () << __PRETTY_FUNCTION__ 
+            << " bookmark remove " << ok << remove.executedQuery();
+  return ok;
+}
+
+bool
+DBManager::Remove (const RecentBook & book)
+{
+  QSqlQuery remove (bookDB);
+  QString pat ("delete from recentbooks where "
+                   "title = \"%1\" AND "
+                   "author = \"%2\" AND "
+                   "lastseen = \"%3\" AND "
+                   "filename = \"%4\" ");
+  bool ok = remove.exec (pat.arg (book.title())
+                            .arg (book.author())
+                            .arg (book.lastSeen())
+                            .arg (book.filename()) );
+  qDebug () << __PRETTY_FUNCTION__ 
+            << " recentbook remove " << ok << remove.executedQuery();
   return ok;
 }
 
@@ -196,6 +232,27 @@ DBManager::ReadAll (const QString & bookfile,
   }
   return good;
 }
+
+bool
+DBManager::ReadAll (RecentBookList & list)
+{
+  QSqlQuery select (bookDB);
+  QString cmd ("select title, author, lastseen, filename "
+                        " from recentbooks ");
+  bool ok = select.exec (cmd);
+  bool good (false);
+  list.clear ();
+  while (ok && select.next ()) {
+    RecentBook book (select.value(0).toString (),
+                   select.value(1).toString (),
+                   select.value(2).toLongLong (),
+                   select.value(3).toString ());
+    list.append (book);
+    good = true;
+  }
+  return good;
+}
+
 
 
 void

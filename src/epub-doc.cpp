@@ -29,10 +29,15 @@
 #include <QDir>
 #include <QUuid>
 #include <QUrl>
+#include <QDateTime>
 #include <QMessageBox>
 #include <QDebug>
 #include "burid-magic.h"
 #include "bookmark.h"
+#include "recent-book.h"
+#include "deliberate.h"
+
+using namespace deliberate;
 
 namespace burid
 {
@@ -41,13 +46,16 @@ EpubDoc::EpubDoc (QObject *parent, DBManager & dbmanager)
    dbm (dbmanager),
    markModel (this),
    unpacker (this),
-   currentSpineItem (0)
+   currentSpineItem (0),
+   maxRecentBooks (10)
 {
   connect (&unpacker, SIGNAL (started()), this, SLOT (unpackStarted()));
   connect (&unpacker, SIGNAL (finished(int, QProcess::ExitStatus)), 
             this, SLOT (unpackDone(int, QProcess::ExitStatus)));
   connect (&unpacker, SIGNAL (error(QProcess::ProcessError)), 
             this, SLOT (unpackError(QProcess::ProcessError)));
+  maxRecentBooks = Settings ().value ("maxrecentbooks",maxRecentBooks).toInt();
+  Settings().setValue ("maxrecentbooks",maxRecentBooks);
 }
 
 BookmarkModel *
@@ -260,6 +268,11 @@ EpubDoc::unpackDone (int exitCode, QProcess::ExitStatus exitStatus)
   dbm.ReadAll (origBookFile, bookmarks);
   markModel.setList (bookmarks);
   emit startBook (startUrl);
+  QString author = currentAuthors.join (tr(" & "));
+  RecentBook book (currentTitle, author, 
+                     QDateTime::currentDateTime().toTime_t(),
+                     origBookFile);
+  dbm.Write (book);
 }
 
 void

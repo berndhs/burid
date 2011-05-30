@@ -82,6 +82,7 @@ HEADERS = \
           src/bookmark.h \
           src/bookmark-model.h \
           src/image-provider.h \
+          src/recent-book.h \
           src/gpl2.h \
           src/cmdoptions.h \
           src/deliberate.h \
@@ -98,6 +99,7 @@ SOURCES = \
           src/bookmark.cpp \
           src/bookmark-model.cpp \
           src/image-provider.cpp \
+          src/recent-book.cpp \
           src/cmdoptions.cpp \
           src/deliberate.cpp \
           src/version.cpp \

@@ -27,5 +27,6 @@
 </qresource>
 <qresource prefix="schemas">
   <file alias="bookmarks.sql">sql/bookmarks.sql</file>
+  <file alias="recentbooks.sql">sql/recentbooks.sql</file>
 </qresource>
 </RCC>

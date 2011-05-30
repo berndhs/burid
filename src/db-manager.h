@@ -23,6 +23,7 @@
  ****************************************************************/
 #include <QSqlDatabase>
 #include "bookmark.h"
+#include "recent-book.h"
 #include <QMap>
 #include <QObject>
 
@@ -42,9 +43,14 @@ public:
   bool  Running () { return dbRunning; }
 
   bool  Write (const Bookmark &  bookmark);
+  bool  Write (const RecentBook & book);
+
   bool  Remove (const Bookmark & bookmark);
+  bool  Remove (const RecentBook & book);
+
   bool  ReadAll (const QString & bookfile,
                        BookmarkList & list);
+  bool  ReadAll (RecentBookList & bookList);
 
 private:
 

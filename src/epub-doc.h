@@ -109,6 +109,7 @@ private:
   QString                        currentTitle;
   QStringList                    currentSubjects;
   QString                        origBookFile;
+  int                            maxRecentBooks;
   QMap <QString, ManifestRec>    manifest;    // map of book part ids to files
   QList <QString>                spine;       // linear order of book parts
 
