@@ -18,7 +18,7 @@ Rectangle {
 
   width: 300
   height: 100
-  color: "green"
+  color: "#77ff77"
   border.color: Qt.darker (color, 2.0)
   border.width: 2
   radius: 8
@@ -34,7 +34,7 @@ Rectangle {
     width: parent.width
     height: 1.5 * normalTextHeight
     radius: bookmarkJump.radius
-    color: "yellow"
+    color: "#ffff77"
     Text {
       anchors {
         verticalCenter: parent.verticalCenter;

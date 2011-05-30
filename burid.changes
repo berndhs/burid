@@ -4,6 +4,7 @@
 - get DPI from system for pdf
 - show relative position in epub book
 - take file names from command line (for xdg-open support)
+- delete bookmarks
 
 * Fri May 27 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.3-1
 - epub bookmarks working, save and jump back
