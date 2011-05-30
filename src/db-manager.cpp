@@ -155,6 +155,25 @@ DBManager::Write (const Bookmark & bookmark)
 }
 
 bool
+DBManager::Remove (const Bookmark & bookmark)
+{
+  QSqlQuery remove (bookDB);
+  QString pat ("delete from bookmarks where "
+                   "bookfile = \"%1\" AND "
+                   "markname = \"%2\" AND "
+                   "spinetitle = \"%3\" AND "
+                   "pageoffset = \"%4\" AND "
+                   "scale = \"%5\" ");
+  bool ok = remove.exec (pat.arg (bookmark.bookFile())
+                            .arg (bookmark.markName())
+                            .arg (bookmark.spineItem())
+                            .arg (bookmark.stringOffset())
+                            .arg (bookmark.stringScale()) );
+  qDebug () << " bookmark remove " << ok << remove.executedQuery();
+  return ok;
+}
+
+bool
 DBManager::ReadAll (const QString & bookfile,
                        BookmarkList & list)
 {

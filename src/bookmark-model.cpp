@@ -114,4 +114,15 @@ BookmarkModel::appendMark (const Bookmark & mark)
   endInsertRows ();
 }
 
+void
+BookmarkModel::removeRow (int row)
+{
+  int nr = rowCount();
+  if (0 <= row && row < nr) {
+    beginRemoveRows (QModelIndex(), row, row);
+    dataList.removeAt (row);
+    endRemoveRows ();
+  }
+}
+
 } // namespace

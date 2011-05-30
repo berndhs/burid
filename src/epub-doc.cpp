@@ -141,6 +141,15 @@ EpubDoc::mark (const QString & markText, double pageY, double pageScale)
   emit marksChanged (markModel.rowCount());
 }
 
+void
+EpubDoc::removeMark (int row)
+{
+  Bookmark mark = markModel.bookmark (row);
+  markModel.removeRow (row);
+  dbm.Remove (mark);
+  emit marksChanged (markModel.rowCount());
+}
+
 int
 EpubDoc::markRowCount ()
 {

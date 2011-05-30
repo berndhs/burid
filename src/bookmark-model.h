@@ -48,6 +48,7 @@ public:
   Q_INVOKABLE QString markText (int row);
 
   void setList (const BookmarkList & list);
+  void removeRow (int row);
 
   void appendMark (const Bookmark & mark);
 

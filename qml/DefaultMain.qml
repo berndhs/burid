@@ -34,7 +34,6 @@ Rectangle {
 
   property alias epubPageY: bookWebContentView.currentPageY
 
-
   signal quitApp ()
   signal startReadEpub ()
   signal startReadPdf ()

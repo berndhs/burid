@@ -42,6 +42,7 @@ public:
   bool  Running () { return dbRunning; }
 
   bool  Write (const Bookmark &  bookmark);
+  bool  Remove (const Bookmark & bookmark);
   bool  ReadAll (const QString & bookfile,
                        BookmarkList & list);
 

@@ -49,6 +49,7 @@ public:
   Q_INVOKABLE void    mark (const QString & markText, 
                             qreal pageY, 
                             qreal pageScale);
+  Q_INVOKABLE void    removeMark (int row);
   Q_INVOKABLE QString nextBookmark();
 
   Q_INVOKABLE BookmarkModel * bookmarkModel ();

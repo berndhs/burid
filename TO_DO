@@ -21,6 +21,9 @@
 - mouse wheel support
 
 - content-slider on side, numerical indication ?
+  X for epub
+  - for pdf ?
 
 - clean cache on changing book and on exit
+  - not necessary on normally configured linux
 

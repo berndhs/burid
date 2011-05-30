@@ -131,16 +131,16 @@ Rectangle {
     }
   }
 
-    ScrollBar {
-      id: bookViewScrollIndicator
-      width: parent.height * 0.02
-      height: bookViewBox.height
-      anchors { right: parent.right; top: parent.top }
-      opacity: 1
-      z: bookViewFlick.z + 4
-      position: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.yPosition : 1)
-      realtivePageSize: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.heightRatio : 1)
-    }
+  ScrollBar {
+    id: bookViewScrollIndicator
+    width: parent.height * 0.02
+    height: bookViewBox.height
+    anchors { right: parent.right; top: parent.top }
+    opacity: 1
+    z: bookViewFlick.z + 4
+    position: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.yPosition : 1)
+    realtivePageSize: (bookViewFlick.height > 0 ? bookViewFlick.visibleArea.heightRatio : 1)
+  }
 
   Flickable {
     id: bookViewFlick
@@ -266,6 +266,9 @@ Rectangle {
     }
     onCancelJump: {
       bookmarkJump.hide ()
+    }
+    onForgetJump: {
+      epubControlIF.removeMark (row)
     }
   }
   Component.onCompleted: {

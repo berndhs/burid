@@ -8,30 +8,38 @@ Rectangle {
   property alias listModel:
   listView.model
   property int markCount:  -1
+  property string forgetButtonColor: "#a4c470"
+  property string forgetButtonFade: "#dbfbf7"
+  property real  normalTextHeight: 32
 
   signal jumpTo (int row)
+  signal forgetJump (int row)
   signal cancelJump ()
 
   width: 300
   height: 100
   color: "green"
+  //border.color: Qt.darker (color, 2.0)
+  radius: 8
+
+  Gradient {
+    id: forgetButtonGradient
+    GradientStop { position: 0.0; color: forgetButtonColor }
+    GradientStop { position: 1.0; color: forgetButtonFade }
+  }
   Rectangle {
     id:
     headlineRect
-    width:
-    parent.width
-    height:
-    childrenRect.height
+    width: parent.width
+    height: 1.5 * normalTextHeight
+    radius: bookmarkJump.radius
     color: "yellow"
     Text {
       anchors {
-        top:
-        parent.top;
-        horizontalCenter:
-        parent.horizontalCenter
+        verticalCenter: parent.verticalCenter;
+        horizontalCenter: parent.horizontalCenter
       }
-      text:
-      markCount + qsTr (" Bookmarks")
+      text: qsTr (" Bookmarks")
     }
     MouseArea {
       anchors.fill: parent
@@ -42,17 +50,31 @@ Rectangle {
   Component {
     id:
     defaultDelegate
-    Rectangle {
-      height: 32
-      width:
-      bookmarkJump.width * 0.5
-      color: "lightblue"
-      Text {
-        text: qsTr ("jump to ") +  markTitle
+    Row {
+      ChoiceButton {
+        height: normalTextHeight
+        labelText: qsTr ("forget")
+        radius: 0.5 * height
+        gradient: forgetButtonGradient
+        onClicked: { bookmarkJump.forgetJump (index) }
       }
-      MouseArea {
-        anchors.fill: parent
-        onClicked: { bookmarkJump.jumpTo (index) }
+      Rectangle {
+        height: normalTextHeight
+        width: bookmarkJump.width * 0.7
+        gradient: forgetButtonGradient
+        radius: 0.5 * height
+        Text {
+          anchors { 
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            leftMargin: parent.radius 
+          }
+          text: qsTr ("jump to ") +  markTitle
+        }
+        MouseArea {
+          anchors.fill: parent
+          onClicked: { bookmarkJump.jumpTo (index) }
+        }
       }
     }
   }
