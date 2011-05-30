@@ -19,7 +19,8 @@ Rectangle {
   width: 300
   height: 100
   color: "green"
-  //border.color: Qt.darker (color, 2.0)
+  border.color: Qt.darker (color, 2.0)
+  border.width: 2
   radius: 8
 
   Gradient {
@@ -92,8 +93,7 @@ Rectangle {
       left:
       bookmarkJump.left
     }
-    delegate:
-    defaultDelegate
+    delegate: defaultDelegate
   }
   Component.onCompleted:
   {
