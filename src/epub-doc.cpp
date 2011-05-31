@@ -172,7 +172,7 @@ EpubDoc::contentPart ()
 
 
 void
-EpubDoc::mark (const QString & markText, double pageY, double pageScale)
+EpubDoc::mark (const QString & markText, qreal pageY, qreal pageScale)
 {
   qDebug () << __PRETTY_FUNCTION__ << origBookFile << markText
             << currentSpineItem << pageY << pageScale;
