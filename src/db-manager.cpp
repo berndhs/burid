@@ -238,7 +238,8 @@ DBManager::ReadAll (RecentBookList & list)
 {
   QSqlQuery select (bookDB);
   QString cmd ("select title, author, lastseen, filename "
-                        " from recentbooks ");
+                        " from recentbooks "
+                        " ORDER BY lastseen DESC");
   bool ok = select.exec (cmd);
   bool good (false);
   list.clear ();
