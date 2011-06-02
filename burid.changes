@@ -1,3 +1,7 @@
+* Thu Jun 02 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.7-1
+- fix recent book memory to use full path name
+- cosmetic changes to UI
+
 * Mon May 30 2011 Bernd Stramm <bernd.stramm@gmail.com| - 0.0.6-1
 - remember recent books
 
