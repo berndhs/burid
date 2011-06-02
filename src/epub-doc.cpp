@@ -213,8 +213,10 @@ EpubDoc::openBook (const QString & filename)
 {
   manifest.clear ();
   spine.clear ();
-  origBookFile = filename;
-  unzip (filename);
+  origBookFile = QFileInfo (filename).canonicalFilePath();
+  if (!filename.isEmpty()) {
+    unzip (filename);
+  }
 }
 
 void
