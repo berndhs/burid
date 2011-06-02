@@ -31,6 +31,7 @@ Rectangle {
   property real topReserve: 20
   property string mainMenuButtonColor: "#b4a470"
   property string mainMenuButtonFade: "#fbdff7"
+  property real shrinkDelay: 175
 
   property alias epubPageY: bookWebContentView.currentPageY
 
@@ -72,7 +73,7 @@ Rectangle {
   {
     console.log ("Recent Epubs")
     recentEpubRect.show ()
-    titleBox.height = titleBox.hiddenHeigh
+    titleBox.hide ()
     showMainSelection (false)
     mainRect.topReserve = 0
   }
@@ -86,7 +87,7 @@ Rectangle {
       bookPdfViewRect.show ()
     }
     recentEpubRect.hide ()
-    titleBox.height = titleBox.hiddenHeight
+    titleBox.hide ()
     showMainSelection (false)
     mainRect.topReserve = 0
     if (theFormat == "pdf") {
@@ -98,14 +99,17 @@ Rectangle {
     bookWebViewRect.hide ()
     bookPdfViewRect.hide ()
     recentEpubRect.hide ()
-    titleBox.height = titleBox.visibleHeight
     showMainSelection (true)
     mainRect.topReserve = 20
   }
   function showMainSelection (visi) {
     bookPdfButton.visible = visi
     epubButtonGroup.visible = visi
-    titleBox.showTitle = visi
+    if (visi) {
+      titleBox.show ()
+    } else {
+      titleBox.hide ()
+    }
     stopButton.visible = !visi
   }
 
@@ -123,14 +127,23 @@ Rectangle {
     id: titleBox
     width: parent.width * 0.75
     property real visibleHeight: parent.height * 0.25
-    property real hiddenHeight: 0
     property bool showTitle: true
-    height: visibleHeight
+    height: scale * visibleHeight
     radius: 16
+    border.color: Qt.darker (color, 2.5)
+    border.width: 4
     anchors {
       horizontalCenter: parent.horizontalCenter
       top: parent.top
       topMargin: topReserve
+    }
+    function show () {
+      scale = 1
+      showTitle = true
+    }
+    function hide () {
+      scale = 0
+      showTitle = false
     }
     color: "#f7f7f7"
     Text {
@@ -141,8 +154,8 @@ Rectangle {
       horizontalAlignment: Text.AlignHCenter
       text: mainRect.appTitle
     }
-    Behavior  on height {
-      NumberAnimation { duration: 250 }
+    Behavior  on scale {
+      NumberAnimation { duration: mainRect.shrinkDelay }
     }
   }
 
@@ -270,7 +283,7 @@ Rectangle {
       left: parent.left
     }
     Behavior  on height {
-      NumberAnimation { duration: 250 }
+      NumberAnimation { duration: mainRect.shrinkDelay }
     }
     BookWebView {
       id: bookWebContentView
@@ -307,7 +320,7 @@ Rectangle {
     }
 
     Behavior  on height {
-      NumberAnimation { duration: 250 }
+      NumberAnimation { duration: mainRect.shrinkDelay }
     }
     RecentEpub {
       width: parent.width
@@ -361,7 +374,7 @@ Rectangle {
       left: parent.left
     }
     Behavior  on height {
-      NumberAnimation { duration: 250 }
+      NumberAnimation { duration: mainRect.shrinkDelay }
     }
     BookPdfView {
       id: bookPdfContentView
