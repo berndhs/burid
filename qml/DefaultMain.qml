@@ -103,16 +103,21 @@ Rectangle {
     mainRect.topReserve = 20
   }
   function showMainSelection (visi) {
-    bookEpubButton.visible = visi
     bookPdfButton.visible = visi
-    recentEpubButton.visible = visi
+    epubButtonGroup.visible = visi
     titleBox.showTitle = visi
     stopButton.visible = !visi
   }
 
   width: 600
   height: 400
-  color: "yellow"
+  Image {
+    id: backgroundPattern
+    source: ":/images/crumple.png"
+    fillMode: Image.Tile
+    width: parent.width
+    height: parent.height
+  }
 
   Rectangle {
     id: titleBox
@@ -172,6 +177,7 @@ Rectangle {
       anchors.centerIn: parent
       spacing: parent.width * 0.1
       Row {
+        id: epubButtonGroup
         spacing: 8
         ChoiceButton {
           id: bookEpubButton

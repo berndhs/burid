@@ -14,6 +14,7 @@
   <file alias="icon48.png">images/icon48.png</file>
   <file alias="icon32.png">images/icon32.png</file>
   <file alias="icon16.png">images/icon16.png</file>
+  <file alias="crumple.png">images/crumple.png</file>
 </qresource>
 <qresource>
   <file alias="BookmarkJumper.qml">qml/BookmarkJumper.qml</file>
