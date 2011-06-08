@@ -25,6 +25,9 @@
 
 #include <QString>
 #include <QList>
+#include "deliberate.h"
+
+using namespace deliberate;
 
 namespace burid
 {
@@ -36,35 +39,23 @@ public:
               const QString & author = QString(), 
                     qint64 lastSeen = 0,
               const QString & filename = QString())
-    :mTitle (title),
-     mAuthor (author),
-     mLastSeen (lastSeen),
-     mFilename (filename)
+    :title (title),
+     author (author),
+     lastSeen (lastSeen),
+     filename (filename)
   {}
 
   RecentBook (const RecentBook & other)
-    :mTitle (other.mTitle),
-     mAuthor (other.mAuthor),
-     mLastSeen (other.mLastSeen),
-     mFilename (other.mFilename)
+    :title (other.title()),
+     author (other.author()),
+     lastSeen (other.lastSeen()),
+     filename (other.filename())
   {}
 
-  QString title () const;
-  QString author () const;
-  qint64  lastSeen () const;
-  QString filename () const;
-
-  void setTitle (const QString & title);
-  void setAuthor (const QString & author);
-  void setLastSeen (qint64 lastSeen);
-  void setFilename (const QString & filename);
-
-private:
-
-  QString   mTitle;
-  QString   mAuthor;
-  qint64    mLastSeen;
-  QString   mFilename;
+  Property <QString>   title;
+  Property <QString>   author;
+  Property <qint64>    lastSeen;
+  Property <QString>   filename;
 
 };
 

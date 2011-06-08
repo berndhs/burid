@@ -36,6 +36,20 @@
 
 namespace deliberate {
 
+template <typename T>
+  class Property
+  {
+  public:
+     Property(const T & value = T())
+       : data(value)
+     {}
+
+     const T& operator() () const    { return data; }
+     void     set (const T & value)  { data = value; }
+  private:
+    T  data;
+  };
+
 
 QTextStream  & StdOut();
 
@@ -45,15 +59,7 @@ void InitSettings ();
 
 QSettings & Settings ();
 
-bool IsMaemo ();
 
-bool IsFingerInterface ();
-
-bool IsIp6Address (QString addr);
-bool IsIp4Address (QString addr);
-
-void Rot1 (QByteArray & data, const QByteArray & key);
-void Rot2 (QByteArray & data, const QByteArray & key);
 }
 
 
