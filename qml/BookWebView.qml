@@ -121,7 +121,6 @@ Rectangle {
       opacity = 0.0
       setFocus (false)
     }
-    Behavior on opacity { NumberAnimation { duration: 90 } }
     onDidEscape: {
       hide ()
     }

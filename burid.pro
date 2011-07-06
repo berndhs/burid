@@ -44,6 +44,8 @@ CONFIG(debug, debug|release) {
   DEFINES += DELIBERATE_DEBUG=1
   TARGET = bin/$${MYNAME}_d
   OBJECTS_DIR = tmp/debug/obj
+  QMAKE_CXXFLAGS_DEBUG += -p
+  QMAKE_LFLAGS_DEBUG += -p
   message ("DEBUG cxx-flags used $${QMAKE_CXXFLAGS_DEBUG}")
   message ("DEBUG c-flags used $${QMAKE_CFLAGS_DEBUG}")
 } else {

@@ -154,9 +154,6 @@ Rectangle {
       horizontalAlignment: Text.AlignHCenter
       text: mainRect.appTitle
     }
-    Behavior  on scale {
-      NumberAnimation { duration: mainRect.shrinkDelay }
-    }
   }
 
   Rectangle {
@@ -282,9 +279,6 @@ Rectangle {
       top: buttonRowRect.bottom
       left: parent.left
     }
-    Behavior  on height {
-      NumberAnimation { duration: mainRect.shrinkDelay }
-    }
     BookWebView {
       id: bookWebContentView
       width: parent.width
@@ -317,10 +311,6 @@ Rectangle {
     {
       height = 0
       listVisible = false
-    }
-
-    Behavior  on height {
-      NumberAnimation { duration: mainRect.shrinkDelay }
     }
     RecentEpub {
       width: parent.width
@@ -372,9 +362,6 @@ Rectangle {
     anchors {
       top: buttonRowRect.bottom
       left: parent.left
-    }
-    Behavior  on height {
-      NumberAnimation { duration: mainRect.shrinkDelay }
     }
     BookPdfView {
       id: bookPdfContentView
